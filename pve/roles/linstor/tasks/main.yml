@@ -1,0 +1,44 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for linstor
+
+- name: Download LINBIT package signing key
+  ansible.builtin.get_url:
+    url: https://packages.linbit.com/package-signing-pubkey.asc
+    dest: /etc/apt/trusted.gpg.d/linbit.asc
+    mode: '0644'
+
+- name: Add LINBIT APT Repository
+  ansible.builtin.apt_repository:
+    repo: deb [signed-by=/etc/apt/trusted.gpg.d/linbit.asc] http://packages.linbit.com/public/ proxmox-8 drbd-9
+    state: present
+    filename: linbit
+    update_cache: true
+
+- name: Install low level components
+  ansible.builtin.apt:
+    state: present 
+    name:
+      - proxmox-headers-6.8.12-8-pve
+      - drbd-dkms
+      - drbd-utils
+
+
+- name: Install LINSTOR components
+  ansible.builtin.apt:
+    state: present 
+    name:
+      - linstor-controller=1.30.4-1
+      - linstor-satellite=1.30.4-1
+      - linstor-client=1.24.0-1
+      - linstor-proxmox=8.1.0-1
+      - linstor-gui=1.8.9-1
+
+- name: Configure LINSTOR Satellite service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/linstor-satellite.service.d/override.conf
+    mode: '0644'
+    content: |
+      [Service]
+      Type=notify
+      TimeoutStartSec=infinity
