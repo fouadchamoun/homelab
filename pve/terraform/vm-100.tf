@@ -7,7 +7,7 @@ resource "proxmox_virtual_environment_vm" "games" {
   started = false
 
   node_name = "pve-0"
-  vm_id     = 102
+  vm_id     = 100
 
   bios = "ovmf"
   machine = "pc-q35-9.0"
@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "games" {
   }
 
   tpm_state {
-    datastore_id = "linstor_nvme_replicated"
+    datastore_id = "linstor_non_replicated"
     version = "v2.0"
   }
 
@@ -45,7 +45,7 @@ resource "proxmox_virtual_environment_vm" "games" {
     interface         = "scsi0"
     aio               = "io_uring"
     cache             = "none"
-    datastore_id      = "linstor_nvme_replicated"
+    datastore_id      = "linstor_non_replicated"
     discard           = "on"
     file_format       = "raw"
 
@@ -56,7 +56,7 @@ resource "proxmox_virtual_environment_vm" "games" {
   }
 
   efi_disk {
-    datastore_id      = "linstor_nvme_replicated"
+    datastore_id      = "linstor_non_replicated"
     file_format       = "raw"
     pre_enrolled_keys = true
     type              = "4m"
