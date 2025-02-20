@@ -79,6 +79,6 @@ resource "proxmox_virtual_environment_vm" "games" {
   }
 
   lifecycle {
-    ignore_changes = [audio_device, vga]
+    ignore_changes = [node_name, audio_device, vga, started]
   }
 }
