@@ -19,6 +19,10 @@ resource "proxmox_virtual_environment_container" "docker_00" {
     template_file_id = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
   }
 
+  features {
+    nesting = true
+  }
+
   initialization {
     hostname = "docker-00"
 

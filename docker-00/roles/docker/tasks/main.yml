@@ -1,0 +1,40 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for docker
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    state: present 
+    name:
+      - curl
+      - ca-certificates
+
+- name: Download Docker package signing key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /etc/apt/trusted.gpg.d/docker.asc
+    mode: '0644'
+
+- name: Add Docker APT Repository
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/debian bookworm stable
+    state: present
+    filename: docker
+    update_cache: true
+
+- name: Install Docker components
+  ansible.builtin.apt:
+    state: present 
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+
+- name: Include next tasks
+  ansible.builtin.include_tasks: "{{ item }}.yml"
+  with_items:
+    - post-install
+    - config

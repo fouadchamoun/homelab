@@ -1,0 +1,19 @@
+- name: Create the docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add user to the docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Enable service to start on boot
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  with_items:
+    - docker
+    - containerd

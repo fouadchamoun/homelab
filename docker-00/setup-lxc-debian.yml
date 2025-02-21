@@ -1,0 +1,6 @@
+---
+
+- name: Setup Docker
+  hosts: docker_nodes
+  roles:
+    - docker
