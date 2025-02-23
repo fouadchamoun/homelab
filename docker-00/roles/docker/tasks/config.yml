@@ -1,8 +1,11 @@
-- name: Create Docker daemon configuration directory
+- name: Create Docker configuration directories
   ansible.builtin.file:
-    path: /etc/docker
+    path: "{{ item }}"
     state: directory
     mode: '0755'
+  with_items:
+    - /etc/docker
+    - /etc/systemd/system/docker.service.d
 
 - name: Create Docker daemon configuration file
   ansible.builtin.template:
@@ -10,4 +13,13 @@
     dest: /etc/docker/daemon.json
     mode: '0644'
   notify: Restart docker
+
+- name: Create Docker service configuration file
+  ansible.builtin.template:
+    src: templates/override.conf.j2
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    mode: '0644'
+  notify: 
+    - Reload systemd daemon
+    - Restart docker
   

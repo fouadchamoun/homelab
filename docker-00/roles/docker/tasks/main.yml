@@ -9,6 +9,8 @@
     name:
       - curl
       - ca-certificates
+      - jq
+      - net-tools
 
 - name: Download Docker package signing key
   ansible.builtin.get_url:
@@ -38,3 +40,4 @@
   with_items:
     - post-install
     - config
+    - linstor-plugin

@@ -1,0 +1,21 @@
+- name: Create LINSTOR plugin configuration directory
+  ansible.builtin.file:
+    path: /etc/linstor
+    state: directory
+    mode: '0755'
+
+- name: Create LINSTOR plugin configuration file
+  ansible.builtin.template:
+    src: templates/docker-volume.conf.j2
+    dest: /etc/linstor/docker-volume.conf
+    mode: '0644'
+  
+- name: Check if LINSTOR Docker plugin is installed
+  ansible.builtin.command: docker plugin ls --format '{{ '{{' }} .Name {{ '}}' }}'
+  register: docker_plugins
+  changed_when: false
+
+- name: Install LINSTOR Docker plugin
+  ansible.builtin.command: docker plugin install linbit/linstor-docker-volume:latest --grant-all-permissions
+  when: "'linbit/linstor-docker-volume:latest' not in docker_plugins.stdout_lines"
+  changed_when: "'linbit/linstor-docker-volume:latest' in docker_plugins.stdout_lines"
