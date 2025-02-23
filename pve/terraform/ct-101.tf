@@ -1,7 +1,3 @@
-data "http" "github_user_key" {
-  url = "https://github.com/fouadchamoun.keys"
-}
-
 resource "proxmox_virtual_environment_container" "docker_00" {
   description = "Managed by Terraform"
   tags        = ["terraform", "docker"]
@@ -63,7 +59,7 @@ resource "proxmox_virtual_environment_container" "docker_00" {
 
 
   disk {
-    datastore_id      = "linstor_replicated"
+    datastore_id      = "linstor-repl"
     size              = 128
   }
 
