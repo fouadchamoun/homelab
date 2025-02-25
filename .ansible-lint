@@ -10,6 +10,7 @@
 # This makes linter to fully ignore rules/tags listed below
 skip_list:
   - yaml[comments]
+  - yaml[new-line-at-end-of-file]
   - yaml[trailing-spaces]
   - yaml[line-length]
   - yaml[no-changed-when]

@@ -8,18 +8,18 @@ resource "proxmox_virtual_environment_container" "kube" {
   started = false
 
   node_name = "pve-0"
-  vm_id     = 104 + count.index
+  vm_id     = 200 + count.index
 
-  unprivileged = true
+  unprivileged = false
 
   operating_system {
     type             = "debian"
     template_file_id = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
   }
 
-  features {
-    nesting = true
-  }
+#   features {
+#     nesting = true
+#   }
 
   initialization {
     hostname = "kube-${count.index}"
