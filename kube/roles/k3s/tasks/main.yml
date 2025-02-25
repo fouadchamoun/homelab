@@ -1,0 +1,33 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for k3s
+
+- name: Configure LXC container
+  delegate_to: "{{ pve_node }}"
+  ansible.builtin.lineinfile:
+    path: "/etc/pve/lxc/{{ lxc_id }}.conf"
+    mode: "0640"
+    line: "{{ item }}"
+  with_items:
+    - "lxc.apparmor.profile: unconfined"
+    - "lxc.cgroup.devices.allow: a"
+    - "lxc.cap.drop: "
+    - "lxc.mount.auto: \"proc:rw sys:rw\""
+  notify: Restart LXC container
+
+- name: Create rc.local file
+  ansible.builtin.template:
+    src: templates/rc.local.j2
+    dest: /etc/rc.local
+    mode: '0740'
+  notify: Restart LXC container
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    state: present 
+    name:
+      - curl
+      - ca-certificates
+      - jq
+      - net-tools

@@ -1,0 +1,11 @@
+---
+
+- name: Setup k3s
+  hosts: kube_control_plane
+  roles:
+    - k3s
+
+- name: Setup k3s
+  hosts: kube_control_plane
+  roles:
+    - cluster-lb

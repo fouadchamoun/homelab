@@ -1,0 +1,18 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for cluster-lb
+  
+- name: Create kube-vip configuration directory
+  ansible.builtin.file:
+    path: "/var/lib/rancher/k3s/server/manifests"
+    state: directory
+
+- name: Download kube-vip rbac.yaml
+  ansible.builtin.get_url:
+    url: https://kube-vip.io/manifests/rbac.yaml
+    dest: /var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml
+
+- name: Create kube-vip configuration file
+  ansible.builtin.template:
+    src: templates/kube-vip.yaml.j2
+    dest: /var/lib/rancher/k3s/server/manifests/kube-vip.yaml

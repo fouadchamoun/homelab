@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for k3s
+- name: Restart LXC container
+  delegate_to: "{{ pve_node }}"
+  ansible.builtin.command: "pct reboot {{ lxc_id }}"
+  changed_when: true
