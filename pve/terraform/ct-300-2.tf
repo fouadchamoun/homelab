@@ -70,6 +70,6 @@ resource "proxmox_virtual_environment_container" "kube_node" {
   # }
 
   lifecycle {
-    ignore_changes = [node_name, started]
+    ignore_changes = [node_name, started, mount_point]
   }
 }
