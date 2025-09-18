@@ -1,0 +1,24 @@
+---
+apiVersion: piraeus.io/v1
+kind: LinstorCluster
+metadata:
+  name: linstor-cluster-config
+  namespace: piraeus-datastore
+spec:
+  externalController:
+    url: http://192.168.200.20:3370
+
+---
+apiVersion: piraeus.io/v1
+kind: LinstorSatelliteConfiguration
+metadata:
+  name: linstor-satellite-config
+  namespace: piraeus-datastore
+spec:
+  podTemplate:
+    spec:
+      hostNetwork: true
+      initContainers:
+        - name: drbd-module-loader
+          $patch: delete
+          

@@ -1,0 +1,58 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: piraeus-storage
+  namespace: piraeus-datastore
+provisioner: linstor.csi.linbit.com
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  linstor.csi.linbit.com/storagePool: pve-nvme-zfs
+  linstor.csi.linbit.com/resourceGroup: "kube-rg-replicated"
+  linstor.csi.linbit.com/placementCount: "1"
+
+  # linstor.csi.linbit.com/nodeList: "pve-0"
+  # linstor.csi.linbit.com/clientList: "kube-0"
+  linstor.csi.linbit.com/placementPolicy: "AutoPlace"
+  linstor.csi.linbit.com/disklessOnRemaining: "true"
+  linstor.csi.linbit.com/allowRemoteVolumeAccess: "true"
+  property.linstor.csi.linbit.com/DrbdOptions/Net/protocol: "A"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-k3s-volume
+spec:
+  storageClassName: piraeus-storage
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: web-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: web-server
+    spec:
+      containers:
+        - name: web-server
+          image: nginx
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: test-k3s-volume
