@@ -1,0 +1,15 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for networking
+
+- name: Deploy .link files for interfaces
+  template:
+    src: interface.link.j2
+    dest: "/etc/systemd/network/10-{{ item.name }}.link"
+  loop: "{{ interfaces }}"
+  loop_control:
+    label: "{{ item.name }}"
+  vars:
+    interface_name: "{{ item.name }}"
+    mac_address: "{{ item.mac }}"
+  notify: Refresh initramfs
