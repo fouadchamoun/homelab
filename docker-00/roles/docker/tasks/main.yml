@@ -40,4 +40,3 @@
   with_items:
     - post-install
     - config
-    - linstor-plugin
