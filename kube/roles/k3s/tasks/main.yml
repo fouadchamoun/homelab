@@ -13,6 +13,7 @@
     - "lxc.cgroup.devices.allow: a"
     - "lxc.cap.drop: "
     - "lxc.mount.auto: \"proc:rw sys:rw\""
+    - "mp0: /usr/lib/modules,mp=/usr/lib/modules,replicate=0,shared=1,ro=1"
   notify: Restart LXC container
 
 - name: Create rc.local file
