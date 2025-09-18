@@ -4,7 +4,7 @@ resource "proxmox_virtual_environment_container" "kube" {
   description = "Managed by Terraform"
   tags        = ["terraform", "kube"]
 
-  start_on_boot = true
+  start_on_boot = false
   started = false
 
   node_name = "pve-0"
@@ -68,6 +68,15 @@ resource "proxmox_virtual_environment_container" "kube" {
   # device_passthrough {
 
   # }
+
+  mount_point {
+    path = "/data"
+    volume = "linstor:pm-d2934109_200"
+    size = "512G"
+    read_only = false
+    shared = true
+    replicate = false
+  }
 
   lifecycle {
     ignore_changes = [node_name, started]
