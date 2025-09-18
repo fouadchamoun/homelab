@@ -1,0 +1,7 @@
+- name: Ensure 'traefik' overlay network exists
+  community.docker.docker_network:
+    name: traefik
+    driver: overlay
+    attachable: true
+    scope: swarm
+    state: present

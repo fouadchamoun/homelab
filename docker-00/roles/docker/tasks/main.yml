@@ -40,3 +40,4 @@
   with_items:
     - post-install
     - config
+    - network
