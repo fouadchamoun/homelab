@@ -1,8 +1,8 @@
 pve_0 ansible_host=192.168.200.20 ansible_user=root
 
-kube_0 ansible_host=192.168.200.26 ansible_user=root pve_node=pve_0 lxc_id=200
-kube_1 ansible_host=192.168.200.27 ansible_user=root pve_node=pve_0 lxc_id=201
-kube_2 ansible_host=192.168.200.28 ansible_user=root pve_node=pve_0 lxc_id=202
+kube_0 ansible_host=192.168.200.26 ansible_user=root pve_node=pve_0 lxc_id=300
+kube_1 ansible_host=192.168.200.27 ansible_user=root pve_node=pve_0 lxc_id=301
+kube_2 ansible_host=192.168.200.28 ansible_user=root pve_node=pve_0 lxc_id=302
 
 [kube_control_plane]
 kube_0
