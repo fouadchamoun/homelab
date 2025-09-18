@@ -16,18 +16,24 @@ terraform {
       source = "bpg/proxmox"
       version = "0.72.0"
     }
+    sops = {
+      source = "carlpett/sops"
+      version = "1.2.1"
+    }
   }
 }
 
 provider "hcp" {}
 
+provider "sops" {}
+
+data "sops_file" "secrets" {
+  source_file = "secrets.yaml"
+}
+
 provider "proxmox" {
   endpoint = "https://pve-0.homelab.fouad.dev:8006"
 
   # Choose one authentication method:
-  api_token = data.hcp_vault_secrets_app.pve.secrets["pve_cluster_api_token"]
-}
-
-data "hcp_vault_secrets_app" "pve" {
-  app_name = "pve"
+  api_token = data.sops_file.secrets.data["pve.cluster_api_token"]
 }

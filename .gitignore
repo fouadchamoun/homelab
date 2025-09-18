@@ -3,3 +3,4 @@ main.code-workspace
 .DS_Store
 .ansible/
 .terraform/
+.decrypted*
