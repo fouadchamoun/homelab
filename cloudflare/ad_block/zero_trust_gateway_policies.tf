@@ -9,7 +9,7 @@ locals {
 }
 
 resource "cloudflare_zero_trust_gateway_policy" "allowlist" {
-  account_id = local.account_id
+  account_id = var.cloudflare_account_id
 
   name        = "Allowlist"
   description = "Domains explicitly allowed"
@@ -23,7 +23,7 @@ resource "cloudflare_zero_trust_gateway_policy" "allowlist" {
 }
 
 resource "cloudflare_zero_trust_gateway_policy" "block_ads" {
-  account_id = local.account_id
+  account_id = var.cloudflare_account_id
 
   name        = "Block Ads"
   description = "Block Ad domains"

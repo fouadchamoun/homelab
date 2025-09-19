@@ -14,7 +14,7 @@ locals {
 }
 
 resource "cloudflare_zero_trust_list" "allowlist" {
-  account_id = local.account_id
+  account_id = var.cloudflare_account_id
 
   name  = "allowlist"
   type  = "DOMAIN"
@@ -25,7 +25,7 @@ resource "cloudflare_zero_trust_list" "allowlist" {
 }
 
 resource "cloudflare_zero_trust_list" "ads_domain_list" {
-  account_id = local.account_id
+  account_id = var.cloudflare_account_id
 
   for_each = {
     for i in range(0, length(local.aggregated_lists)) :
