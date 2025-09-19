@@ -2,23 +2,23 @@ terraform {
   cloud { 
     organization = "fouadflix" 
 
-    workspaces { 
-      name = "homelab" 
+    workspaces {
+      name = "pve" 
     } 
   }
 
   required_providers {
     hcp = {
       source = "hashicorp/hcp"
-      version = "0.102.0"
+      version = "~> 0.102"
     }
     proxmox = {
       source = "bpg/proxmox"
-      version = "0.72.0"
+      version = "~> 0.72"
     }
     sops = {
       source = "carlpett/sops"
-      version = "1.2.1"
+      version = "~> 1.2"
     }
   }
 }
