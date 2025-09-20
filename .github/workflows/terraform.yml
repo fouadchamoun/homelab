@@ -1,6 +1,7 @@
 name: 'Terraform'
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 0 1 * *' # Every month, on the 1st at midnight
 
