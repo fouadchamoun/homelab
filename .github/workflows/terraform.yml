@@ -28,6 +28,9 @@ jobs:
           terraform_version: 1.8.5
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      - name: Work Directory
+        run: cd cloudflare/ad_block
+        
       - name: Terraform Init
         run: terraform init
 
