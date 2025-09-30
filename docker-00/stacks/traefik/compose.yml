@@ -1,0 +1,35 @@
+version: '3.8'
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: nfs
+      device: :/mnt/user/appdata/pve-0/docker-00/traefik
+      o: addr=192.168.200.10,rw,nfsvers=4,async
+
+services:
+  main:
+    image: traefik:v3.3
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.swarm
+    networks: 
+      - traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - data:/etc/traefik
+    environment:
+      CF_DNS_API_TOKEN: 
+      CF_API_EMAIL: 
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
