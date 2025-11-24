@@ -7,7 +7,7 @@ resource "cloudflare_zero_trust_gateway_settings" "main" {
     }
 
     certificate = {
-      id = "c4a5bef6-f30f-4d5d-96af-5ca0f139ca73"
+      id = cloudflare_zero_trust_gateway_certificate.main.id
     }
 
     fips = null
@@ -16,4 +16,8 @@ resource "cloudflare_zero_trust_gateway_settings" "main" {
       enabled = false
     }
   }
+}
+
+resource "cloudflare_zero_trust_gateway_certificate" "main" {
+  account_id = local.account_id
 }
