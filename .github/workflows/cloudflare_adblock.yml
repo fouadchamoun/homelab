@@ -3,14 +3,14 @@ name: 'Terraform'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 * *' # Every month, on the 1st at midnight
+    - cron: '0 9 * * *' # Every day, at 9 AM
 
 permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  cloudflare_adblock:
+    name: 'Cloudflare Adblock - Terraform'
     runs-on: ubuntu-latest
     environment: production
 
@@ -28,7 +28,7 @@ jobs:
         with:
           terraform_version: 1.8.5
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-        
+
       - name: Terraform Init
         run: terraform init
 
