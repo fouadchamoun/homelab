@@ -2,6 +2,18 @@
 ---
 # tasks file for networking
 
+# Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+- name: Enable IP forwarding
+  ansible.posix.sysctl:
+    sysctl_file: /etc/sysctl.d/99-ip-forwarding.conf
+    name: "{{ item }}"
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+  loop:
+    - net.ipv4.ip_forward
+    - net.ipv6.conf.all.forwarding
 
 - name: Pin network interface names
   block:
