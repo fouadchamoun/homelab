@@ -14,10 +14,16 @@
 
 - name: Setup networking
   hosts: pve_nodes
+  tags:
+    - setup
+    - networking
   roles:
     - networking
 
 - name: Setup LINSTOR storage
   hosts: pve_nodes
+  tags:
+    - setup
+    - linstor
   roles:
     - linstor
