@@ -22,6 +22,14 @@
   roles:
     - networking
 
+- name: Setup Intel SR-IOV
+  hosts: pve_nodes
+  tags:
+    - setup
+    - intel_sriov
+  roles:
+    - intel_sriov
+
 - name: Setup LINSTOR storage
   hosts: pve_nodes
   tags:

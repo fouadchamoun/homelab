@@ -1,0 +1,64 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for intel_sriov
+
+- name: Install dkms dependencies
+  ansible.builtin.apt:
+    name:
+      - dkms
+      - build-*
+      - proxmox-headers-{{ ansible_kernel }}
+- name: Install i915-sriov-dkms .deb package
+  ansible.builtin.apt:
+    deb: https://github.com/strongtz/i915-sriov-dkms/releases/download/2025.11.10/i915-sriov-dkms_2025.11.10_amd64.deb
+  register: apt_result
+- debug:
+    var: apt_result
+
+
+- name: Set sriov_numvfs with sysfsutils
+  block:
+    - name: Install sysfsutils package
+      ansible.builtin.apt:
+        name: sysfsutils
+        state: present
+        update_cache: no
+    - name: Create sriov_numvs entry
+      ansible.builtin.copy:
+        dest: /etc/sysfs.d/sriov_numvfs.conf
+        content: |
+          devices/pci0000:00/0000:00:02.0/sriov_numvfs = 7
+
+
+- name: Set kernel params
+  vars:
+    kernel_cmdline_file: /etc/kernel/cmdline
+    kernel_params_to_remove: []
+    kernel_params_to_add:
+      - "i915.enable_guc=3"
+      - "i915.max_vfs=7"
+      - "module_blacklist=xe"
+  block:
+    - name: Read current kernel cmdline
+      ansible.builtin.slurp:
+        path: "{{ kernel_cmdline_file }}"
+      register: cmdline_raw
+
+    - name: Set current kernel cmdline fact
+      ansible.builtin.set_fact:
+        current_cmdline: "{{ cmdline_raw.content | b64decode | trim }}"
+
+    - name: Build updated kernel cmdline fact
+      ansible.builtin.set_fact:
+        new_cmdline: >-
+          {{ (current_cmdline.split() + kernel_params_to_add) | difference(kernel_params_to_remove) | unique | sort | join(' ') }}
+
+    - name: Ensure extra kernel boot parameters are present
+      ansible.builtin.copy:
+        dest: "{{ kernel_cmdline_file }}"
+        content: "{{ new_cmdline }}\n"
+        owner: root
+        group: root
+        mode: '0644'
+      when: new_cmdline != current_cmdline
+      notify: Refresh boot configuration
