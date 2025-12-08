@@ -2,9 +2,11 @@
 
 - name: Pin current kernel version
   hosts: pve_nodes
+  vars:
+    PVE_KERNEL_VERSION: 6.17.2-2-pve
   tasks:
     - name: Pin the current kernel version
-      ansible.builtin.command: "proxmox-boot-tool kernel pin 6.8.12-8-pve"
+      ansible.builtin.command: "proxmox-boot-tool kernel pin {{ PVE_KERNEL_VERSION }}"
       changed_when: true
       notify: Refresh boot configuration
   handlers:
@@ -12,37 +14,18 @@
       ansible.builtin.command: proxmox-boot-tool refresh
       changed_when: true
 
-- name: Pin network interface names
-  hosts: pve_0
-  vars:
-    interfaces:
-      - name: enxg0
-        mac: 58:47:ca:7b:b7:26
-      - name: enxg1
-        mac: 58:47:ca:7b:b7:27
-      - name: en2g0
-        mac: 58:47:ca:7b:b7:28
-      - name: en2g1
-        mac: 58:47:ca:7b:b7:29
+- name: Setup networking
+  hosts: pve_nodes
+  tags:
+    - setup
+    - networking
   roles:
     - networking
 
 - name: Setup LINSTOR storage
   hosts: pve_nodes
+  tags:
+    - setup
+    - linstor
   roles:
     - linstor
-
-- name: Start LINSTOR
-  hosts: pve_0
-  tasks:
-    - name: Enable LINSTOR satellite service on all nodes
-      ansible.builtin.systemd_service:
-        name: linstor-satellite
-        state: started
-        enabled: true
-
-    - name: Enable LINSTOR controller service on one node only
-      ansible.builtin.systemd_service:
-        name: linstor-controller
-        state: started
-        enabled: true
