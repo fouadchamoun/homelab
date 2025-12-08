@@ -1,15 +1,43 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for networking
 
-- name: Deploy .link files for interfaces
-  template:
-    src: interface.link.j2
-    dest: "/etc/systemd/network/10-{{ item.name }}.link"
-  loop: "{{ interfaces }}"
-  loop_control:
-    label: "{{ item.name }}"
-  vars:
-    interface_name: "{{ item.name }}"
-    mac_address: "{{ item.mac }}"
-  notify: Refresh initramfs
+
+- name: Pin network interface names
+  block:
+    - name: Create temporary directory for .link files
+      delegate_to: localhost
+      tempfile:
+        state: directory
+      register: temp_dir
+
+    - name: Deploy .link files to temporary directory
+      delegate_to: localhost
+      template:
+        src: interface.link.j2
+        dest: "{{ temp_dir.path }}/10-{{ item.name }}.link"
+      loop: "{{ network_interfaces }}"
+      loop_control:
+        label: "{{ item.name }}"
+      vars:
+        interface_name: "{{ item.name }}"
+        mac_address: "{{ item.mac }}"
+
+    - name: Synchronize .link files to destination
+      ansible.posix.synchronize:
+        src: "{{ temp_dir.path }}/"
+        dest: "/etc/systemd/network/"
+        archive: no
+        checksum: yes
+        recursive: yes
+        delete: yes
+        rsync_opts:
+          - "--chown=root:root"
+      notify: Refresh initramfs
+
+  always:
+    - name: Clean up temporary directory
+      delegate_to: localhost
+      file:
+        path: "{{ temp_dir.path }}"
+        state: absent
