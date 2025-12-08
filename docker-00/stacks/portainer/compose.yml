@@ -1,0 +1,33 @@
+version: '3.8'
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: nfs
+      device: :/mnt/user/appdata/pve-0/docker-00/portainer
+      o: addr=192.168.200.10,rw,nfsvers=4,async
+
+services:
+  main:
+    image: portainer/portainer-ce:lts
+    networks: 
+      - traefik
+    ports:
+      - "8000:8000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:/data
+    # deploy:
+    #   labels:
+    #     traefik.enable: "true"
+    #     traefik.http.routers.portainer.rule: Host(`portainer.docker-00.homelab.fouad.dev`)
+    #     traefik.http.serverstransport.portainer.insecureskipverify: "true"
+    #     traefik.http.services.portainer.loadbalancer.server.port: 9443
+    #     traefik.http.services.portainer.loadbalancer.server.scheme: https
+    #     traefik.http.services.portainer.loadbalancer.serverstransport: portainer
