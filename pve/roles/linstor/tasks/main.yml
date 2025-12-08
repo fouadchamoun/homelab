@@ -2,37 +2,32 @@
 ---
 # tasks file for linstor
 
-- name: Download LINBIT package signing key
-  ansible.builtin.get_url:
-    url: https://packages.linbit.com/package-signing-pubkey.asc
-    dest: /etc/apt/trusted.gpg.d/linbit.asc
-    mode: '0644'
-
 - name: Add LINBIT APT Repository
-  ansible.builtin.apt_repository:
-    repo: deb [signed-by=/etc/apt/trusted.gpg.d/linbit.asc] http://packages.linbit.com/public/ proxmox-8 drbd-9
-    state: present
-    filename: linbit
-    update_cache: true
+  ansible.builtin.deb822_repository:
+    name: linbit
+    types: deb
+    uris: http://packages.linbit.com/public/
+    suites: proxmox-9
+    components: drbd-9
+    signed_by: https://packages.linbit.com/package-signing-pubkey.asc
 
 - name: Install low level components
   ansible.builtin.apt:
-    state: present 
+    state: present
     name:
       - proxmox-headers-6.8.12-8-pve
       - drbd-dkms
       - drbd-utils
 
-
 - name: Install LINSTOR components
   ansible.builtin.apt:
-    state: present 
+    state: present
     name:
-      - linstor-controller=1.30.4-1
-      - linstor-satellite=1.30.4-1
-      - linstor-client=1.24.0-1
-      - linstor-proxmox=8.1.0-1
-      - linstor-gui=1.8.9-1
+      - linstor-controller=1.32.3-1
+      - linstor-satellite=1.32.3-1
+      - linstor-client=1.27.0-1
+      - linstor-proxmox=8.1.4-1
+      - linstor-gui=2.0.0-1
 
 - name: Configure LINSTOR Satellite service
   ansible.builtin.copy:
@@ -42,3 +37,16 @@
       [Service]
       Type=notify
       TimeoutStartSec=infinity
+
+- name: Enable LINSTOR satellite service
+  ansible.builtin.systemd_service:
+    name: linstor-satellite
+    state: started
+    enabled: true
+
+- name: Enable LINSTOR controller service on one node only
+  delegate_to: pve_0
+  ansible.builtin.systemd_service:
+    name: linstor-controller
+    state: started
+    enabled: true

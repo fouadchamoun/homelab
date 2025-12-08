@@ -31,18 +31,3 @@
   hosts: pve_nodes
   roles:
     - linstor
-
-- name: Start LINSTOR
-  hosts: pve_0
-  tasks:
-    - name: Enable LINSTOR satellite service on all nodes
-      ansible.builtin.systemd_service:
-        name: linstor-satellite
-        state: started
-        enabled: true
-
-    - name: Enable LINSTOR controller service on one node only
-      ansible.builtin.systemd_service:
-        name: linstor-controller
-        state: started
-        enabled: true
