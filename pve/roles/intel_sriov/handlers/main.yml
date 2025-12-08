@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for intel_sriov
+
+- name: Refresh boot configuration
+  ansible.builtin.command: proxmox-boot-tool refresh
+  changed_when: true
