@@ -2,9 +2,11 @@
 
 - name: Pin current kernel version
   hosts: pve_nodes
+  vars:
+    PVE_KERNEL_VERSION: 6.17.2-2-pve
   tasks:
     - name: Pin the current kernel version
-      ansible.builtin.command: "proxmox-boot-tool kernel pin 6.8.12-8-pve"
+      ansible.builtin.command: "proxmox-boot-tool kernel pin {{ PVE_KERNEL_VERSION }}"
       changed_when: true
       notify: Refresh boot configuration
   handlers:

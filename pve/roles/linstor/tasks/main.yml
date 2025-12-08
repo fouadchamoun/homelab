@@ -15,7 +15,7 @@
   ansible.builtin.apt:
     state: present
     name:
-      - proxmox-headers-6.8.12-8-pve
+      - proxmox-headers-{{ ansible_kernel }}
       - drbd-dkms
       - drbd-utils
 
