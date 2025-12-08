@@ -1,0 +1,5 @@
+pve_nodes:
+  hosts:
+    pve_0:
+      ansible_host: pve-0.homelab.fouad.dev
+      ansible_user: root
