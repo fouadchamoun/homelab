@@ -1,7 +1,7 @@
 locals {
   # Iterate through each ads_domain_list resource and extract its ID
   ads_domain_list_ids = [
-    for k, v in cloudflare_zero_trust_list.ads_domain_list : 
+    for k, v in cloudflare_zero_trust_list.ads_domain_list :
     format("$%s", replace(v.id, "-", "")) # remove dashes and prepend $
   ]
 
