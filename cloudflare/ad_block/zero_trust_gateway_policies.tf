@@ -34,4 +34,11 @@ resource "cloudflare_zero_trust_gateway_policy" "block_ads" {
   filters = ["dns"]
   action  = "block"
   traffic = join(" or ", local.block_ads_filter_expressions)
+
+  lifecycle {
+    precondition {
+      condition     = length(local.chunks) <= local.max_ads_lists
+      error_message = "Too many ads domain chunks: length(chunks) = ${length(local.chunks)}, but max_ads_lists = ${local.max_ads_lists}. Increase max_ads_lists."
+    }
+  }
 }
