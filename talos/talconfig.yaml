@@ -1,0 +1,67 @@
+---
+clusterName: fouadflix-talos
+talosVersion: v1.12.4
+kubernetesVersion: v1.35.0
+endpoint: https://talos.homelab.fouad.dev:6443
+allowSchedulingOnControlPlanes: true
+additionalApiServerCertSans:
+  - talos.homelab.fouad.dev
+
+controlPlane:
+  talosImageURL: factory.talos.dev/nocloud-installer/ccb316620580bed962de9c18048ca01fa050c383417a1f83d09390d19f430f6e
+  kernelModules:
+    - name: drbd
+      parameters:
+        - usermode_helper=disabled
+    - name: drbd_transport_tcp
+  nameservers:
+    - 172.64.36.1
+    - 172.64.36.2
+  patches:
+  - |-
+    machine:
+      features:
+        hostDNS:
+          enabled: true
+          resolveMemberNames: true
+
+nodes:
+  - hostname: talos-cp-00
+    controlPlane: true
+    ipAddress: 192.168.200.60
+    installDisk: /dev/sda
+    networkInterfaces:
+      - deviceSelector:
+          busPath: "0*" # should select any hardware network device, if you have just one, it will be selected
+        addresses:
+          - 192.168.200.60/24
+        routes:
+          - gateway: 192.168.200.1
+        vip:
+          ip: 192.168.200.70
+  - hostname: talos-cp-01
+    controlPlane: true
+    ipAddress: 192.168.200.61
+    installDisk: /dev/sda
+    networkInterfaces:
+      - deviceSelector:
+          busPath: "0*" # should select any hardware network device, if you have just one, it will be selected
+        addresses:
+          - 192.168.200.61/24
+        routes:
+          - gateway: 192.168.200.1
+        vip:
+          ip: 192.168.200.70
+  - hostname: talos-cp-02
+    controlPlane: true
+    ipAddress: 192.168.200.62
+    installDisk: /dev/sda
+    networkInterfaces:
+      - deviceSelector:
+          busPath: "0*" # should select any hardware network device, if you have just one, it will be selected
+        addresses:
+          - 192.168.200.62/24
+        routes:
+          - gateway: 192.168.200.1
+        vip:
+          ip: 192.168.200.70
