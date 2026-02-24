@@ -3,3 +3,9 @@ pve_nodes:
     pve_0:
       ansible_host: pve-0.homelab.fouad.dev
       ansible_user: root
+    pve_1:
+      ansible_host: pve-1.homelab.fouad.dev
+      ansible_user: root
+    pve_2:
+      ansible_host: pve-2.homelab.fouad.dev
+      ansible_user: root
