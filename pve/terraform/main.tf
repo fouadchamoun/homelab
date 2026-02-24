@@ -1,10 +1,10 @@
-terraform { 
-  cloud { 
-    organization = "fouadflix" 
+terraform {
+  cloud {
+    organization = "fouadflix"
 
     workspaces {
-      name = "pve" 
-    } 
+      name = "pve"
+    }
   }
 
   required_providers {
@@ -14,7 +14,7 @@ terraform {
     }
     proxmox = {
       source = "bpg/proxmox"
-      version = "~> 0.72"
+      version = "~> 0.93"
     }
     sops = {
       source = "carlpett/sops"
