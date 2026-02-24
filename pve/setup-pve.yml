@@ -2,8 +2,11 @@
 
 - name: Pin current kernel version
   hosts: pve_nodes
+  tags:
+    - setup
+    - kernel
   vars:
-    PVE_KERNEL_VERSION: 6.17.2-2-pve
+    PVE_KERNEL_VERSION: 6.17.4-2-pve
   tasks:
     - name: Pin the current kernel version
       ansible.builtin.command: "proxmox-boot-tool kernel pin {{ PVE_KERNEL_VERSION }}"
@@ -14,13 +17,13 @@
       ansible.builtin.command: proxmox-boot-tool refresh
       changed_when: true
 
-- name: Setup networking
+- name: Setup PVE
   hosts: pve_nodes
   tags:
     - setup
-    - networking
+    - pve_conf
   roles:
-    - networking
+    - pve_conf
 
 - name: Setup Intel SR-IOV
   hosts: pve_nodes
