@@ -109,3 +109,17 @@ resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster_entrypoi
     override_ips = ["192.168.200.60", "192.168.200.61", "192.168.200.62"]
   }
 }
+
+resource "cloudflare_zero_trust_gateway_policy" "override_talos_traefik_vip" {
+  account_id    = local.account_id
+  description   = ""
+  action        = "override"
+  enabled       = true
+  filters       = ["dns"]
+  name          = "talos-traefik-vip"
+  precedence    = 1006361
+  traffic       = "any(dns.domains[*] == \"homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
+  rule_settings = {
+    override_ips = ["192.168.200.80"]
+  }
+}
