@@ -19,7 +19,7 @@ resource "cloudflare_zero_trust_gateway_policy" "block_lg_tv_updates" {
   account_id    = local.account_id
   description   = ""
   action        = "block"
-  enabled       = true
+  enabled       = false
   filters       = ["dns"]
   name          = "Block LG TV updates"
   precedence    = 1000864
@@ -54,7 +54,7 @@ resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
   }
 }
 
-resource "cloudflare_zero_trust_gateway_policy" "override_pve" {
+resource "cloudflare_zero_trust_gateway_policy" "override_pve_0" {
   account_id    = local.account_id
   description   = ""
   action        = "override"
@@ -68,21 +68,35 @@ resource "cloudflare_zero_trust_gateway_policy" "override_pve" {
   }
 }
 
-resource "cloudflare_zero_trust_gateway_policy" "override_pve_docker_00" {
+resource "cloudflare_zero_trust_gateway_policy" "override_pve_1" {
   account_id    = local.account_id
   description   = ""
   action        = "override"
   enabled       = true
   filters       = ["dns"]
-  name          = "docker-00"
-  precedence    = 1005363
-  traffic       = "any(dns.domains[*] == \"docker-00.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\" \"${cloudflare_zero_trust_dns_location.freebox.id}\"}"
+  name          = "pve-1"
+  precedence    = 1004373
+  traffic       = "any(dns.domains[*] == \"pve-1.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
   rule_settings = {
-    override_ips = ["192.168.200.23"]
+    override_ips = ["192.168.200.30"]
   }
 }
 
-resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster" {
+resource "cloudflare_zero_trust_gateway_policy" "override_pve_2" {
+  account_id    = local.account_id
+  description   = ""
+  action        = "override"
+  enabled       = true
+  filters       = ["dns"]
+  name          = "pve-2"
+  precedence    = 1004383
+  traffic       = "any(dns.domains[*] == \"pve-2.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
+  rule_settings = {
+    override_ips = ["192.168.200.40"]
+  }
+}
+
+resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster_entrypoint" {
   account_id    = local.account_id
   description   = ""
   action        = "override"

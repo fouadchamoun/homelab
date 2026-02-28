@@ -10,7 +10,7 @@
       - proxmox-headers-{{ ansible_kernel }}
 - name: Install i915-sriov-dkms .deb package
   ansible.builtin.apt:
-    deb: https://github.com/strongtz/i915-sriov-dkms/releases/download/2025.11.10/i915-sriov-dkms_2025.11.10_amd64.deb
+    deb: https://github.com/strongtz/i915-sriov-dkms/releases/download/2025.12.10/i915-sriov-dkms_2025.12.10_amd64.deb
   register: apt_result
 - debug:
     var: apt_result
