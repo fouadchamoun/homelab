@@ -1,0 +1,26 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: scw-sm
+  namespace: external-secrets
+spec:
+  conditions:
+    - namespaces:
+      - "default"
+      - "traefik"
+
+  provider:
+    scaleway:
+      region: fr-par
+      projectId: 2dd832af-92c5-4744-b300-d184ddfe1037
+      accessKey:
+        secretRef:
+          name: scw-sm-secret
+          key: access-key
+          namespace: external-secrets
+      secretKey:
+        secretRef:
+          name: scw-sm-secret
+          key: secret-key
+          namespace: external-secrets
