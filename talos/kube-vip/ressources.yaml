@@ -1,4 +1,13 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubevip
+  namespace: kube-system
+data:
+  range-traefik: 192.168.200.80-192.168.200.89
+
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
