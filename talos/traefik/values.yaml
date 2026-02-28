@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/traefik/traefik-helm-chart/refs/heads/master/traefik/values.schema.json
+
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: true
+  kubernetesGateway:
+    enabled: false
+
+service:
+  enabled: true
+  type: LoadBalancer
+  loadBalancerIP: "192.168.200.80"
+  # externalTrafficPolicy: Local
+  # loadBalancerClass: kube-vip.io/kube-vip-class
+
+deployment:
+  enabled: true
+  kind: Deployment
+  replicas: 3
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+affinity:
+  podAntiAffinity:
+   requiredDuringSchedulingIgnoredDuringExecution:
+     - labelSelector:
+         matchLabels:
+           app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+           app.kubernetes.io/instance: '{{ .Release.Name }}-{{ include "traefik.namespace" . }}'
+       topologyKey: kubernetes.io/hostname
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik.homelab.fouad.dev`)
+    entryPoints:
+      - websecure
+
+ports:
+  websecure:
+    asDefault: true
+    port: 443
+    http3:
+      enabled: true
+  web:
+    port: 80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
+tlsStore:
+  default:
+    defaultCertificate:
+      secretName: wildcard-fouad-dev-tls
+
+logs:
+  general:
+    level: INFO
+  access:
+    enabled: true
+
+extraObjects:
+  - apiVersion: external-secrets.io/v1
+    kind: ExternalSecret
+    metadata:
+      name: cloudflare
+      namespace: traefik
+    spec:
+      secretStoreRef:
+          kind: ClusterSecretStore
+          name: scw-sm
+      target:
+          name: cloudflare
+      refreshInterval: 60s
+      data:
+        - secretKey: api-token
+          remoteRef:
+            key: path:/cloudflare/account_api_token/talos_cert_manager
+            property: token
+
+  - apiVersion: cert-manager.io/v1
+    kind: Issuer
+    metadata:
+      name: cloudflare
+      namespace: traefik
+    spec:
+      acme:
+        server: https://acme-v02.api.letsencrypt.org/directory
+        email: mail@fouad.dev
+        privateKeySecretRef:
+          name: cloudflare-key
+        solvers:
+          - dns01:
+              cloudflare:
+                apiTokenSecretRef:
+                  name: cloudflare
+                  key: api-token
+
+  - apiVersion: cert-manager.io/v1
+    kind: Certificate
+    metadata:
+      name: wildcard-fouad-dev
+      namespace: traefik
+    spec:
+      secretName: wildcard-fouad-dev-tls
+      dnsNames:
+        - "fouad.dev"
+        - "*.fouad.dev"
+        - "*.homelab.fouad.dev"
+      issuerRef:
+        name: cloudflare
+        kind: Issuer
