@@ -37,8 +37,6 @@ nodes:
           - 192.168.200.60/24
         routes:
           - gateway: 192.168.200.1
-        vip:
-          ip: 192.168.200.70
   - hostname: talos-cp-01
     controlPlane: true
     ipAddress: 192.168.200.61
@@ -50,8 +48,6 @@ nodes:
           - 192.168.200.61/24
         routes:
           - gateway: 192.168.200.1
-        vip:
-          ip: 192.168.200.70
   - hostname: talos-cp-02
     controlPlane: true
     ipAddress: 192.168.200.62
@@ -63,5 +59,3 @@ nodes:
           - 192.168.200.62/24
         routes:
           - gateway: 192.168.200.1
-        vip:
-          ip: 192.168.200.70
