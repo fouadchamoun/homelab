@@ -1,0 +1,19 @@
+# server:
+
+theme:
+  presets:
+    default-dark: # gruvbox-dark
+      background-color: 0 0 16
+      primary-color: 43 59 81
+      positive-color: 61 66 44
+      negative-color: 6 96 59
+    default-light: # zebra
+      light: true
+      background-color: 0 0 95
+      primary-color: 0 0 10
+      negative-color: 0 90 50
+      positive-color: 96 96 44
+
+pages:
+  - $include: pages/home/page.yml
+  - $include: pages/youtube/page.yml

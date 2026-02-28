@@ -1,0 +1,24 @@
+- name: Home
+  columns:
+    - size: full
+      widgets:
+        # RSS
+        - type: split-column
+          max-columns: 2
+          widgets:
+            - type: hacker-news
+              collapse-after: 10
+            - type: group
+              widgets:
+                - type: reddit
+                  subreddit: selfhosted
+                  style: vertical-list
+                  show-thumbnails: false
+                  show-flairs: true
+                  collapse-after: 8
+                - type: reddit
+                  subreddit: homelab
+                  style: vertical-list
+                  show-thumbnails: false
+                  show-flairs: true
+                  collapse-after: 8

@@ -1,0 +1,33 @@
+- name: YouTube
+  columns:
+    - size: full
+      widgets:
+        - type: videos
+          title: Homelab
+          style: horizontal-cards
+          channels:
+            - UC4w1YQAJMWOz4qtxinq55LQ # Level1Techs
+            - UCOk-gHyjcWZNj3Br4oxwh0A # Techno Tim
+            - UCv6J_jJa8GJqFwQNgNrMuww # ServeTheHome
+            - UC9evhW4JB_UdXSLeZGy8lGw # Raid Owl
+            - UCZNhwA1B5YqiY1nLzmM0ZRg # Christian Lempa
+
+        - type: videos
+          title: Tech
+          style: horizontal-cards
+          channels:
+            - UCv7UOhZ2XuPwm9SN5oJsCjA # Intermit.Tech
+            - UC6biysICWOJ-C3P4Tyeggzg # Low Level
+            - UCRYOj4DmyxhBVrdvbsUwmAA # optimum
+            - UCO2x-p9gg9TLKneXlibGR7w # Snazzy Labs
+            - UC9x0AN7BWHpCDHSm9NiJFJQ # NetworkChuck
+            - UCsBjURrPoezykLs9EqgamOA # Fireship
+
+        - type: videos
+          title: MISC
+          style: horizontal-cards
+          channels:
+            - UCfDNi1aEljAQ17mUrfUjkvg # Alton Brown
+            - UCaLqj-d_p8iuUfda5398igA # Ramy RC
+            - UCjtUS7-SZTi6pXjUbzGHQCg # Undecided with Matt Ferrell
+            - UCdBK94H6oZT2Q7l0-b0xmMg # ShortCircuit
