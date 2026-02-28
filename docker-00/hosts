@@ -1,4 +1,0 @@
-docker_00 ansible_host=192.168.200.23 ansible_user=root
-
-[docker_nodes]
-docker_00
