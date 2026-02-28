@@ -1,0 +1,16 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: linstor-replicated
+  namespace: piraeus-datastore
+provisioner: linstor.csi.linbit.com
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  linstor.csi.linbit.com/storagePool: pve-nvme-lvm
+  linstor.csi.linbit.com/resourceGroup: kube-rg-repl
+  linstor.csi.linbit.com/placementCount: "2"
+  linstor.csi.linbit.com/disklessOnRemaining: "true"
+  DrbdOptions/auto-diskful: "1"
+  csi.storage.k8s.io/fstype: xfs
