@@ -9,6 +9,7 @@ spec:
     - namespaces:
       - "default"
       - "traefik"
+      - "cloudflared"
 
   provider:
     scaleway:
