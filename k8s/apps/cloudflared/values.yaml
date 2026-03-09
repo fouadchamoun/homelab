@@ -1,0 +1,53 @@
+base-app:
+  image:
+    repository: cloudflare/cloudflared
+    tag: 2026.2.0
+  replicaCount: 3
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  service:
+    enabled: false
+  ingressRoute:
+    enabled: false
+  secrets:
+    env:
+      tunnel-token:
+        envVarName: TUNNEL_TOKEN
+        remoteRef:
+          key: path:/cloudflare/tunnel/talos
+          property: token
+  command:
+    # Configures tunnel run parameters
+    - cloudflared
+    - tunnel
+    - --no-autoupdate
+    - --loglevel
+    - info
+    - --metrics
+    - 0.0.0.0:2000
+    - run
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 4000m
+      memory: 1024Mi
+
+  podSecurityContext:
+    sysctls:
+      # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
+      - name: net.ipv4.ping_group_range
+        value: "65532 65532"
+  livenessProbe:
+    failureThreshold: 1
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    httpGet:
+      # Cloudflared has a /ready endpoint which returns 200 if and only if
+      # it has an active connection to Cloudflare's network.
+      path: /ready
+      port: 2000
