@@ -7,6 +7,7 @@ metadata:
 provisioner: linstor.csi.linbit.com
 allowVolumeExpansion: true
 volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
 parameters:
   linstor.csi.linbit.com/storagePool: pve-nvme-lvm
   linstor.csi.linbit.com/resourceGroup: kube-rg-repl
