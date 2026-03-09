@@ -1,0 +1,21 @@
+{{- if .Values.pvc.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "base-app.name" . }}-{{ .Values.pvc.name }}
+  labels:
+    app.kubernetes.io/name: {{ include "base-app.name" . }}
+    app.kubernetes.io/instance: {{ include "base-app.name" . }}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": never
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: linstor-replicated
+  accessModes: {{ .Values.pvc.accessModes }}
+  resources:
+    requests:
+      storage: {{ required "A valid pvc.size is required!" .Values.pvc.size }}
+{{- end }}
