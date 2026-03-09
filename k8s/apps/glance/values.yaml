@@ -1,0 +1,35 @@
+base-app:
+  image:
+    repository: glanceapp/glance
+    tag: v0.8.4
+  replicaCount: 3
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  service:
+    port: 8080
+  ingressRoute:
+    enabled: true
+  volumeMounts:
+    - name: glance-config
+      mountPath: /app/config
+  volumes:
+    - name: glance-config
+      configMap:
+        name: glance-config
+        items:
+          - key: config
+            path: glance.yml
+          - key: page-home
+            path: pages/home/page.yml
+          - key: page-youtube
+            path: pages/youtube/page.yml
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 128Mi

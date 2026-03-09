@@ -1,0 +1,10 @@
+---
+apiVersion: v2
+type: application
+name: glance
+version: 0.1.0
+
+dependencies:
+  - name: base-app
+    repository: file://../base-app
+    version: 0.1.0
