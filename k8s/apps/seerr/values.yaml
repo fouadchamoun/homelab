@@ -1,0 +1,20 @@
+base-app:
+  image:
+    repository: ghcr.io/seerr-team/seerr
+    tag: v3.1.0
+  service:
+    port: 5055
+  # ingressRoute:
+  #   enabled: true
+  pvc:
+    enabled: true
+    size: 300Mi
+    mountPath: /app/config
+    # cloneFromNfsPath: /mnt/user/appdata/seerr
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 4000m
+      memory: 1024Mi
