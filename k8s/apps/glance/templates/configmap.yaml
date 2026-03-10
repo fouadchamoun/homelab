@@ -5,7 +5,7 @@ metadata:
   name: {{ include "base-app.name" . }}-config
 data:
   config: |
-{{ .Files.Get "assets/config.yml" | indent 4 }}
+{{ .Files.Get "assets/glance.yml" | indent 4 }}
   page-home: |
 {{ .Files.Get "assets/pages/home/page.yml" | indent 4 }}
   page-youtube: |
