@@ -8,10 +8,8 @@ metadata:
     app.kubernetes.io/name: {{ include "base-app.name" . }}
     app.kubernetes.io/instance: {{ include "base-app.name" . }}
   annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-10"
-    "helm.sh/hook-delete-policy": never
-    "helm.sh/resource-policy": keep
+    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-options: Delete=false
 spec:
   storageClassName: linstor-replicated
   accessModes: {{ .Values.pvc.accessModes }}
