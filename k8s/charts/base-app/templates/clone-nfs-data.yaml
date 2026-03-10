@@ -7,8 +7,9 @@ metadata:
   labels:
     {{- include "base-app.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-delete-policy": hook-succeeded
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   backoffLimit: 1  # Fail fast if issues
   template:
@@ -28,7 +29,7 @@ spec:
               apk add --no-cache rsync nfs-utils
               mkdir -p /nfs /linstor
               # Initial sync (mounts handle rest)
-              rsync -avz --delete /nfs/ /linstor/
+              rsync -avz --ignore-existing /nfs/ /linstor/
               echo "Migration complete"
           volumeMounts:
             - mountPath: /nfs
