@@ -1,6 +1,0 @@
-dependencies:
-- name: base-app
-  repository: file://../base-app
-  version: 0.1.0
-digest: sha256:c042ad96fb77d2d92678317c45c9f50f8635be3bfe903a2acbe727d0a40c788e
-generated: "2026-02-28T18:35:57.623238+01:00"
