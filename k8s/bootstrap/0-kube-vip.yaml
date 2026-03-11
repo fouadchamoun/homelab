@@ -1,0 +1,79 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-vip
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  sources:
+    - repoURL: https://kube-vip.github.io/helm-charts
+      chart: kube-vip
+      targetRevision: 0.9.6
+      helm:
+        releaseName: kube-vip
+        valuesObject:
+          config:
+            address: "192.168.200.70"
+          env:
+            vip_interface: "eth0"
+            vip_arp: "true"
+            vip_subnet: "32"
+            vip_leaderelection: "true" # --leaderElection
+            lb_enable: "true" # --enableLoadBalancer
+            lb_port: "6443"
+            dns_mode: first
+            dhcp_mode: ipv4
+            cp_enable: "true" # --controlplane
+            cp_namespace: kube-system
+            svc_enable: "true"
+            svc_election: "false"
+            prometheus_server: ":2112"
+          envValueFrom:
+            vip_nodename:
+              fieldRef:
+                fieldPath: spec.nodeName
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/control-plane
+              operator: Exists
+            - effect: NoExecute
+              key: node-role.kubernetes.io/control-plane
+              operator: Exists
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: node-role.kubernetes.io/master
+                    operator: Exists
+                - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
+
+    - repoURL: https://kube-vip.github.io/helm-charts
+      chart: kube-vip-cloud-provider
+      targetRevision: 0.2.10
+      helm:
+        releaseName: kube-vip-cloud-provider
+        valuesObject:
+          cm:
+            data:
+              range-traefik: 192.168.200.80-192.168.200.89
+
+  syncPolicy:
+    automated:
+      prune: false
+      allowEmpty: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
