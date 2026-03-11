@@ -11,6 +11,88 @@ resource "helm_release" "argocd" {
   ]
 }
 
+resource "argocd_project" "cluster_bootstrap" {
+  metadata {
+    name      = "cluster-bootstrap"
+    namespace = "argocd"
+  }
+
+  spec {
+    description = "Cluster Bootstrap"
+
+    source_repos = [
+      "https://github.com/fouadchamoun/homelab.git",
+      "https://kube-vip.github.io/helm-charts",
+      "ghcr.io/piraeusdatastore/piraeus-operator",
+      "ghcr.io/piraeusdatastore/helm-charts",
+      "quay.io/jetstack/charts",
+      "https://traefik.github.io/charts"
+    ]
+
+    cluster_resource_whitelist {
+      group = "*"
+      kind  = "*"
+    }
+
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "argocd"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "kube-system"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "piraeus-datastore"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "external-secrets"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "cert-manager"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "traefik"
+    }
+  }
+}
+
+# Application - Cluster Bootstrap
+resource "argocd_application" "cluster_bootstrap" {
+  depends_on = [ helm_release.argocd ]
+
+  metadata {
+    name = "cluster-bootstrap"
+  }
+
+  spec {
+    project = argocd_project.cluster_bootstrap.metadata[0].name
+
+    source {
+      repo_url        = "https://github.com/fouadchamoun/homelab.git"
+      target_revision = "main"
+      path            = "k8s/bootstrap"
+    }
+
+    destination {
+      server    = "https://kubernetes.default.svc"
+      namespace = "argocd"
+    }
+
+    sync_policy {
+      automated {
+        prune       = false
+        allow_empty = false
+        self_heal   = true
+      }
+    }
+  }
+}
+
 # Git Generator - Directories
 resource "argocd_application_set" "git_directories" {
   depends_on = [ helm_release.argocd ]
@@ -70,15 +152,6 @@ resource "argocd_application_set" "git_directories" {
             prune       = false
             allow_empty = false
             self_heal   = false
-          }
-
-          retry {
-            limit = "0"
-            # backoff {
-            #   factor = ""
-            #   duration = ""
-            #   max_duration = ""
-            # }
           }
 
           sync_options = [
