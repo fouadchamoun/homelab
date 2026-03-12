@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: traefik
+  sources:
+    - repoURL: https://traefik.github.io/charts
+      chart: traefik
+      targetRevision: 39.0.2
+      helm:
+        releaseName: traefik
+        valueFiles:
+          - $homelab_repo/k8s/bootstrap/traefik/values.yaml
+    - repoURL: 'https://github.com/fouadchamoun/homelab.git'
+      targetRevision: main
+      path: k8s/bootstrap/traefik/manifests
+      ref: homelab_repo
+  syncPolicy:
+    automated:
+      prune: false
+      allowEmpty: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true

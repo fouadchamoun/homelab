@@ -19,6 +19,21 @@ provider "registry.terraform.io/argoproj-labs/argocd" {
   ]
 }
 
+provider "registry.terraform.io/carlpett/sops" {
+  version     = "1.4.0"
+  constraints = "~> 1.3"
+  hashes = [
+    "h1:JUoee3mwUO97yw+vwKSaHebLaJfEqK+o1EulPVlbX7w=",
+    "zh:16a29544498de504d8f451fe7168dd3518739e5f2afc92d5e75d564951bd5a5c",
+    "zh:39f8913224a463aa8a1cdf7ef8c5c8e4fdea8631387016aefa1a688a1fac5a53",
+    "zh:432fbb45a6006855f4fdd14f386efb93d151213f2e95a4a6e775048825e4ebb6",
+    "zh:96a6f2b1bb89be020e115096745146bcbac07cde46f530a8891f9fddc15eee91",
+    "zh:99689b2cf75b0b7703c031417f371a54fe201eb342728adaadb7d558bfecba31",
+    "zh:ace19ad9cd9b0e7c981a9f0c0a87f4aacb644a7837aa3baa7cfa06c25a96f007",
+    "zh:ec13176354490aa6e2ee3481539c15ee073593e14e459701c9a6e09072cf7ada",
+  ]
+}
+
 provider "registry.terraform.io/hashicorp/hcp" {
   version     = "0.111.0"
   constraints = "~> 0.102"

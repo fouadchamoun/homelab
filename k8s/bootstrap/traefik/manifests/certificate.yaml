@@ -1,0 +1,15 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-fouad-dev
+  namespace: traefik
+spec:
+  secretName: wildcard-fouad-dev-tls
+  dnsNames:
+    - "fouad.dev"
+    - "*.fouad.dev"
+    - "*.homelab.fouad.dev"
+  issuerRef:
+    name: cloudflare
+    kind: Issuer

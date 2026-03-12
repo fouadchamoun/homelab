@@ -1,0 +1,94 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linstor
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: piraeus-datastore
+  sources:
+    - repoURL: ghcr.io/piraeusdatastore/piraeus-operator
+      chart: piraeus
+      targetRevision: 2.10.5
+      helm:
+        releaseName: piraeus-operator
+        valuesObject:
+          installCRDs: true
+          serviceAccount:
+            name: piraeus-operator-controller-manager
+
+    - repoURL: ghcr.io/piraeusdatastore/helm-charts
+      chart: linstor-cluster
+      targetRevision: 1.1.1
+      helm:
+        releaseName: linstor-cluster
+        valuesObject:
+          linstorCluster:
+            externalController:
+              url: http://192.168.200.50:3370
+          linstorSatelliteConfigurations:
+            - name: host-network
+              podTemplate:
+                spec:
+                  hostNetwork: true
+            - name: talos-loader-override
+              podTemplate:
+                spec:
+                  initContainers:
+                    - name: drbd-shutdown-guard
+                      $patch: delete
+                    - name: drbd-module-loader
+                      $patch: delete
+                  volumes:
+                    - name: run-systemd-system
+                      $patch: delete
+                    - name: run-drbd-shutdown-guard
+                      $patch: delete
+                    - name: systemd-bus-socket
+                      $patch: delete
+                    - name: lib-modules
+                      $patch: delete
+                    - name: usr-src
+                      $patch: delete
+                    - name: etc-lvm-backup
+                      hostPath:
+                        path: /var/etc/lvm/backup
+                        type: DirectoryOrCreate
+                    - name: etc-lvm-archive
+                      hostPath:
+                        path: /var/etc/lvm/archive
+                        type: DirectoryOrCreate
+          storageClasses:
+            - name: linstor-replicated
+              # annotations:
+              #   storageclass.kubernetes.io/is-default-class: "true"
+              reclaimPolicy: Retain
+              allowVolumeExpansion: true
+              volumeBindingMode: WaitForFirstConsumer
+              provisioner: linstor.csi.linbit.com
+              parameters:
+                linstor.csi.linbit.com/storagePool: pve-nvme-lvm
+                linstor.csi.linbit.com/resourceGroup: kube-rg-repl
+                linstor.csi.linbit.com/placementCount: "2"
+                linstor.csi.linbit.com/disklessOnRemaining: "true"
+                DrbdOptions/auto-diskful: "1"
+                csi.storage.k8s.io/fstype: xfs
+          volumeSnapshotClasses: []
+          volumeGroupSnapshotClasses: []
+
+  syncPolicy:
+    # automated:
+    #   prune: false
+    #   allowEmpty: false
+    #   selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
