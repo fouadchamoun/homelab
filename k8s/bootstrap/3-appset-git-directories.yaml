@@ -1,0 +1,49 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: git-directories
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - namespace: cloudflared
+                - namespace: public-apps
+                - namespace: glance
+          - git:
+              repoURL: https://github.com/fouadchamoun/homelab.git
+              revision: main
+              directories:
+                - path: k8s/apps/{{ .namespace }}
+
+  template:
+    metadata:
+      name: '{{ .path.basename }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        targetRevision: main
+        path: "{{ .path.path }}"
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: "{{ .namespace }}"
+      syncPolicy:
+        automated:
+          prune: false
+          allowEmpty: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - ServerSideApply=true
+          - FailOnSharedResource=true
