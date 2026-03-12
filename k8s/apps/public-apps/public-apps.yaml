@@ -1,0 +1,42 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: public-apps
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+
+  generators:
+    - git:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        revision: main
+        directories:
+          - path: k8s/apps/public-apps/*
+
+  template:
+    metadata:
+      name: '{{ .path.basename }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        targetRevision: main
+        path: "{{ .path.path }}"
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: public-apps
+      syncPolicy:
+        automated:
+          prune: false
+          allowEmpty: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - ServerSideApply=true
+          - FailOnSharedResource=true
