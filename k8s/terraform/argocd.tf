@@ -12,6 +12,11 @@ resource "helm_release" "argocd" {
 }
 
 resource "argocd_project" "cluster_bootstrap" {
+  depends_on = [
+    helm_release.argocd,
+    kubernetes_secret_v1.scw_sm_secret
+  ]
+
   metadata {
     name      = "cluster-bootstrap"
     namespace = "argocd"
@@ -26,6 +31,7 @@ resource "argocd_project" "cluster_bootstrap" {
       "ghcr.io/piraeusdatastore/piraeus-operator",
       "ghcr.io/piraeusdatastore/helm-charts",
       "quay.io/jetstack/charts",
+      "https://charts.external-secrets.io",
       "https://traefik.github.io/charts"
     ]
 

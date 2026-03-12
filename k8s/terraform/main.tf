@@ -12,6 +12,10 @@ terraform {
       source = "hashicorp/hcp"
       version = "~> 0.102"
     }
+    sops = {
+      source = "carlpett/sops"
+      version = "~> 1.3"
+    }
     kubernetes = {
       source = "hashicorp/kubernetes"
       version = "~> 3"
@@ -28,6 +32,8 @@ terraform {
 }
 
 provider "hcp" {}
+
+provider "sops" {}
 
 provider "kubernetes" {
   config_path = "~/.kube/configs/fouadflix-talos"
