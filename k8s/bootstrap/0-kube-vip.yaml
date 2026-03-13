@@ -67,10 +67,10 @@ spec:
               range-traefik: 192.168.200.80-192.168.200.89
 
   syncPolicy:
-    automated:
-      prune: false
-      allowEmpty: false
-      selfHeal: true
+    automated: null
+      # prune: false
+      # allowEmpty: false
+      # selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true

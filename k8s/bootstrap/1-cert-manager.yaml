@@ -25,10 +25,10 @@ spec:
           crds:
             enabled: true
   syncPolicy:
-    automated:
-      prune: false
-      allowEmpty: false
-      selfHeal: true
+    automated: null
+      # prune: false
+      # allowEmpty: false
+      # selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
