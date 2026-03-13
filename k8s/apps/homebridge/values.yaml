@@ -1,0 +1,23 @@
+base-app:
+  image:
+    repository: ghcr.io/homebridge/homebridge
+    tag: "2026-03-07"
+  service:
+    port: 8581
+  podSecurityContext: null
+  containerSecurityContext: null
+  hostNetwork: true
+  ingressRoute:
+    enabled: true
+  pvc:
+    enabled: true
+    size: 1Gi
+    mountPath: /homebridge
+    cloneFromNfsPath: /mnt/user/appdata/homebridge
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 1024Mi
