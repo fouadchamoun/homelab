@@ -11,18 +11,23 @@ spec:
   goTemplateOptions: ["missingkey=error"]
 
   generators:
-    - matrix:
-        generators:
-          - list:
-              elements:
-                - namespace: cloudflared
-                - namespace: public-apps
-                - namespace: glance
-          - git:
-              repoURL: https://github.com/fouadchamoun/homelab.git
-              revision: main
-              directories:
-                - path: k8s/apps/{{ .namespace }}
+    - git:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        revision: main
+        directories:
+          - path: k8s/apps/*
+          - path: k8s/apps/public-apps
+            exclude: true
+        values:
+          namespace: '{{ .path.basename }}'
+
+    - git:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        revision: main
+        directories:
+          - path: k8s/apps/public-apps/*
+        values:
+          namespace: public-apps
 
   template:
     metadata:
@@ -35,7 +40,7 @@ spec:
         path: "{{ .path.path }}"
       destination:
         server: 'https://kubernetes.default.svc'
-        namespace: "{{ .namespace }}"
+        namespace: "{{ .values.namespace }}"
       syncPolicy:
         automated:
           prune: false
