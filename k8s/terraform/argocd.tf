@@ -1,7 +1,39 @@
+resource "kubernetes_namespace" "argocd" {
+  metadata {
+    name = "argocd"
+    labels = {
+      "name" = "argocd"
+    }
+  }
+}
+
+resource "kubernetes_secret_v1" "argocd_secret" {
+  metadata {
+    name = "argocd-secret"
+    namespace = kubernetes_namespace.argocd.metadata[0].name
+  }
+
+  type = "Opaque"
+
+  data_wo_revision = 2
+  data_wo = {
+    "admin.password" = bcrypt(ephemeral.sops_file.secrets.data["argocd.admin-password"])
+    "admin.passwordMtime" = timestamp()
+    "server.secretkey" = ephemeral.sops_file.secrets.data["argocd.server-secretkey"]
+    "webhook.github.secret" = ephemeral.sops_file.secrets.data["github-webhooks.pull-requests"]
+  }
+
+  lifecycle {
+    ignore_changes = [ metadata ]
+  }
+}
+
 resource "helm_release" "argocd" {
+  depends_on = [ kubernetes_secret_v1.argocd_secret ]
+
   name             = "argocd"
-  namespace        = "argocd"
-  create_namespace = true
+  namespace        = kubernetes_namespace.argocd.metadata[0].name
+  create_namespace = true # not needed anymore
 
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
@@ -69,7 +101,7 @@ resource "argocd_project" "cluster_bootstrap" {
 
 # Application - Cluster Bootstrap
 resource "argocd_application" "cluster_bootstrap" {
-  depends_on = [ helm_release.argocd ]
+  depends_on = [ argocd_project.cluster_bootstrap ]
 
   metadata {
     name = "cluster-bootstrap"

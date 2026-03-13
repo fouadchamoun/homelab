@@ -46,6 +46,7 @@ provider "helm" {
 }
 
 provider "argocd" {
-  use_local_config = true
-  # context = "foo" # Use explicit context from ArgoCD config instead of `current-context`.
+  server_addr = "argocd.homelab.fouad.dev"
+  username    = "admin"
+  password    = ephemeral.sops_file.secrets.data["argocd.admin-password"]
 }

@@ -4,9 +4,6 @@ type: application
 name: cloudflared
 version: 0.1.0
 
-annotations:
-  argocd.argoproj.io/sync-wave: "-1"
-
 dependencies:
   - name: base-app
     repository: file://../../charts/base-app
