@@ -36,8 +36,6 @@ spec:
               name: source-nfs
             - mountPath: /linstor
               name: target-linstor
-          # securityContext:
-          #   privileged: true  # For NFS mount if needed
       volumes:
         - name: source-nfs
           nfs:

@@ -1,10 +1,10 @@
-{{- define "base-app.envFromValues" -}}
+{{- define "base-app.envFromValues" }}
 {{- with .Values.env }}
-{{- toYaml . }}
+{{ toYaml . }}
 {{- end }}
 {{- end }}
 
-{{- define "base-app.envFromSecrets" -}}
+{{- define "base-app.envFromSecrets" }}
 {{- range $name, $secret := .Values.secrets.env }}
 - name: {{ required "secrets.env.*.envVarName is required" $secret.envVarName }}
   valueFrom:
