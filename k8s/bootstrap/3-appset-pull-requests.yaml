@@ -39,6 +39,9 @@ spec:
           prune: true
           allowEmpty: true
           selfHeal: false
+        managedNamespaceMetadata:
+          labels: # The labels to set on the application namespace
+            pod-security.kubernetes.io/enforce: privileged
         syncOptions:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true

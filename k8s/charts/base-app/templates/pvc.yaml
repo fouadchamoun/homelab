@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: {{ include "base-app.name" . }}
     app.kubernetes.io/instance: {{ include "base-app.name" . }}
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
     argocd.argoproj.io/sync-options: Delete=false
 spec:
   storageClassName: linstor-replicated
