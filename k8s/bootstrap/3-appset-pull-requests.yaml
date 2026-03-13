@@ -1,0 +1,47 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: pull-requests
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+
+  generators:
+  - pullRequest:
+      github:
+        owner: fouadchamoun
+        repo: homelab
+        labels:
+        - argocd
+      filters:
+      - targetBranchMatch: "main"
+      values:
+        appName: '{{ regexReplaceAll ".*\\(app:(.*?)\\).*" .title "${1}" }}'
+
+  template:
+    metadata:
+      name: '{{ .values.appName }}-pr-{{ .number }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        targetRevision: '{{ .head_sha }}'
+        path: 'k8s/apps/{{ .values.appName }}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: "pull-requests"
+      syncPolicy:
+        automated:
+          prune: true
+          allowEmpty: true
+          selfHeal: false
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - ServerSideApply=true
+          - FailOnSharedResource=true
