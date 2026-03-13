@@ -31,6 +31,8 @@ spec:
           linstorCluster:
             externalController:
               url: http://192.168.200.50:3370
+            nfsServer:
+              enabled: false
           linstorSatelliteConfigurations:
             - name: host-network
               podTemplate:
@@ -82,13 +84,27 @@ spec:
           volumeGroupSnapshotClasses: []
 
   syncPolicy:
-    # automated:
-    #   prune: false
-    #   allowEmpty: false
-    #   selfHeal: true
+    automated: null
+      # prune: false
+      # allowEmpty: false
+      # selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
       - PruneLast=true
       - ServerSideApply=true
       - FailOnSharedResource=true
+      - RespectIgnoreDifferences=true
+
+  ignoreDifferences:
+    - kind: ValidatingWebhookConfiguration
+      group: "*"
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - kind: Secret
+      group: "*"
+      name: piraeus-operator-tls
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
