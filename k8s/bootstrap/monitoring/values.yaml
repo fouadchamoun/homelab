@@ -1,0 +1,60 @@
+cluster:
+  name: "talos"
+destinations:
+  - name: grafana-cloud-metrics
+    type: prometheus
+    urlFrom: convert.nonsensitive(remote.kubernetes.secret.grafana_cloud_metrics.data["prom-host"]) + "/api/prom/push"
+    auth:
+      type: basic
+      usernameKey: prom-username
+      passwordKey: access-token
+    secret:
+      create: false
+      name: grafana-cloud-secret
+      namespace: monitoring
+  - name: grafana-cloud-logs
+    type: loki
+    urlFrom: convert.nonsensitive(remote.kubernetes.secret.grafana_cloud_logs.data["loki-host"]) + "/loki/api/v1/push"
+    auth:
+      type: basic
+      usernameKey: loki-username
+      passwordKey: access-token
+    secret:
+      create: false
+      name: grafana-cloud-secret
+      namespace: monitoring
+
+clusterMetrics:
+  enabled: true
+  windows-exporter:
+    deploy: false
+    enabled: false
+  node-exporter:
+    enabled: true
+    metricsTuning:
+      useIntegrationAllowList: true
+clusterEvents:
+  enabled: true
+annotationAutodiscovery:
+  enabled: true
+  annotations:
+    scrape: prometheus.io/scrape
+    metricsPath: prometheus.io/path  # Optional, if using path annotations
+    metricsPortNumber: prometheus.io/port  # Optional, if using port annotations
+nodeLogs:
+  enabled: false
+podLogs:
+  enabled: true
+  excludeNamespaces: []
+alloy-metrics:
+  enabled: true
+alloy-singleton:
+  enabled: true
+alloy-logs:
+  enabled: true
+integrations:
+  cert-manager:
+    instances:
+      - name: cert-manager
+        labelSelectors:
+          app.kubernetes.io/instance: cert-manager

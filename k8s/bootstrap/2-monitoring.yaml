@@ -1,0 +1,40 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+    - repoURL: 'https://github.com/fouadchamoun/homelab.git'
+      targetRevision: main
+      path: k8s/bootstrap/monitoring/manifests
+      ref: homelab_repo
+
+    - repoURL: 'https://grafana.github.io/helm-charts'
+      chart: k8s-monitoring
+      targetRevision: 3.8.4
+      helm:
+        releaseName: k8s-monitoring
+        valueFiles:
+          - $homelab_repo/k8s/bootstrap/monitoring/values.yaml
+  syncPolicy:
+    automated:
+      prune: false
+      allowEmpty: false
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels: # The labels to set on the application namespace
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
