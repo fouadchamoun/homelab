@@ -64,7 +64,8 @@ resource "argocd_project" "cluster_bootstrap" {
       "ghcr.io/piraeusdatastore/helm-charts",
       "quay.io/jetstack/charts",
       "https://charts.external-secrets.io",
-      "https://traefik.github.io/charts"
+      "https://traefik.github.io/charts",
+      "https://grafana.github.io/helm-charts"
     ]
 
     cluster_resource_whitelist {
@@ -95,6 +96,10 @@ resource "argocd_project" "cluster_bootstrap" {
     destination {
       server = "https://kubernetes.default.svc"
       namespace = "traefik"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "monitoring"
     }
   }
 }
