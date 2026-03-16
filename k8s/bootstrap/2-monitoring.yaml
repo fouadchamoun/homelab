@@ -25,10 +25,10 @@ spec:
         valueFiles:
           - $homelab_repo/k8s/bootstrap/monitoring/values.yaml
   syncPolicy:
-    automated:
-      prune: false
-      allowEmpty: false
-      selfHeal: true
+    automated: null
+      # prune: false
+      # allowEmpty: false
+      # selfHeal: true
     managedNamespaceMetadata:
       labels: # The labels to set on the application namespace
         pod-security.kubernetes.io/enforce: privileged
