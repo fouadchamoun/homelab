@@ -29,6 +29,11 @@ spec:
         values:
           namespace: public-apps
 
+  # This sync policy pertains to the ApplicationSet, not to the Applications it creates.
+  syncPolicy:
+    # Prevents ApplicationSet controller from deleting Applications. Update is allowed
+    applicationsSync: create-update
+
   template:
     metadata:
       name: '{{ .path.basename }}'
@@ -46,6 +51,9 @@ spec:
           prune: false
           allowEmpty: false
           selfHeal: true
+        managedNamespaceMetadata:
+          labels: # The labels to set on the application namespace
+            pod-security.kubernetes.io/enforce: privileged
         syncOptions:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
