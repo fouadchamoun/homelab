@@ -20,7 +20,7 @@ resource "kubernetes_secret_v1" "argocd_secret" {
     "admin.password" = bcrypt(ephemeral.sops_file.secrets.data["argocd.admin-password"])
     "admin.passwordMtime" = timestamp()
     "server.secretkey" = ephemeral.sops_file.secrets.data["argocd.server-secretkey"]
-    "webhook.github.secret" = ephemeral.sops_file.secrets.data["github-webhooks.pull-requests"]
+    "webhook.github.secret" = ephemeral.sops_file.secrets.data["github-webhooks.secret"]
   }
 
   lifecycle {
