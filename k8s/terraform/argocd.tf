@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "argocd" {
+resource "kubernetes_namespace_v1" "argocd" {
   metadata {
     name = "argocd"
     labels = {
@@ -10,7 +10,7 @@ resource "kubernetes_namespace" "argocd" {
 resource "kubernetes_secret_v1" "argocd_secret" {
   metadata {
     name = "argocd-secret"
-    namespace = kubernetes_namespace.argocd.metadata[0].name
+    namespace = kubernetes_namespace_v1.argocd.metadata[0].name
   }
 
   type = "Opaque"
@@ -32,7 +32,7 @@ resource "helm_release" "argocd" {
   depends_on = [ kubernetes_secret_v1.argocd_secret ]
 
   name             = "argocd"
-  namespace        = kubernetes_namespace.argocd.metadata[0].name
+  namespace        = kubernetes_namespace_v1.argocd.metadata[0].name
   create_namespace = true # not needed anymore
 
   repository       = "https://argoproj.github.io/argo-helm"
