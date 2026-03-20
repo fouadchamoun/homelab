@@ -33,10 +33,37 @@ clusterMetrics:
     enabled: true
     metricsTuning:
       useIntegrationAllowList: true
+      # excludeMetrics:
+      #   - my_metric_.*
+  cadvisor:
+    enabled: true
+    metricsTuning:
+      useDefaultAllowList: true
+      excludeNamespaces: []
+      excludeMetrics: []
+  kube-state-metrics:
+    enabled: true
+    metricsTuning:
+      useDefaultAllowList: true
+      excludeMetrics: []
+  kubelet:
+    enabled: true
+    metricsTuning:
+      useDefaultAllowList: true
+      excludeMetrics: []
+  kubeletResource:
+    enabled: true
+    metricsTuning:
+      useDefaultAllowList: true
+      excludeMetrics: []
+
 clusterEvents:
   enabled: true
 annotationAutodiscovery:
   enabled: true
+  excludeNamespaces:
+    - argocd
+    - traefik
   annotations:
     scrape: prometheus.io/scrape
     metricsPath: prometheus.io/path  # Optional, if using path annotations
