@@ -23,6 +23,31 @@ spec:
             name: piraeus-operator-controller-manager
 
     - repoURL: ghcr.io/piraeusdatastore/helm-charts
+      chart: snapshot-controller
+      targetRevision: 5.0.3
+      helm:
+        releaseName: snapshot-controller
+        valuesObject:
+          installCRDs: true
+          volumeSnapshotClasses:
+            - name: linbit-sds-snapshots
+              annotations:
+                snapshot.storage.kubernetes.io/is-default-class: "true"
+              driver: linstor.csi.linbit.com
+              deletionPolicy: Delete
+              parameters:
+                snap.linstor.csi.linbit.com/type: S3
+                snap.linstor.csi.linbit.com/remote-name: scw-talos-linstor
+                snap.linstor.csi.linbit.com/allow-incremental: "true"
+                # snap.linstor.csi.linbit.com/delete-local: "false"
+                snap.linstor.csi.linbit.com/s3-bucket: linstor-talos
+                snap.linstor.csi.linbit.com/s3-endpoint: s3.fr-par.scw.cloud
+                # snap.linstor.csi.linbit.com/s3-signing-region:
+                # snap.linstor.csi.linbit.com/s3-use-path-style: "false"
+                csi.storage.k8s.io/snapshotter-secret-name: scw-linstor-remote-secret
+                csi.storage.k8s.io/snapshotter-secret-namespace: piraeus-datastore
+
+    - repoURL: ghcr.io/piraeusdatastore/helm-charts
       chart: linstor-cluster
       targetRevision: 1.1.1
       helm:
@@ -101,9 +126,24 @@ spec:
       group: "*"
       jqPathExpressions:
         - .webhooks[].clientConfig.caBundle
+
+    - kind: CustomResourceDefinition
+      group: "*"
+      name: volumegroupsnapshotcontents.groupsnapshot.storage.k8s.io
+      jqPathExpressions:
+        - .spec.conversion.webhook.clientConfig.caBundle
+
     - kind: Secret
       group: "*"
       name: piraeus-operator-tls
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
+
+    - kind: Secret
+      group: "*"
+      name: snapshot-controller-conversion-webhook
       jsonPointers:
         - /data/ca.crt
         - /data/tls.crt
