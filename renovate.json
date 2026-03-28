@@ -1,6 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
-  ]
+    ":dependencyDashboard",
+    ":configMigration",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
+    ":separateMajorReleases",
+    "replacements:all",
+    "workarounds:all",
+    "abandonments:recommended",
+    "helpers:pinGitHubActionDigests",
+    "helpers:githubDigestChangelogs"
+  ],
+  "prHourlyLimit": 0,
+  "internalChecksFilter": "strict",
+  "minimumReleaseAge": "7 days",
+  "argocd": {
+    "managerFilePatterns": ["k8s/bootstrap/*"]
+  },
+  "kubernetes": {
+    "managerFilePatterns": ["k8s/**/manifests/*"]
+  }
 }
