@@ -10,15 +10,15 @@ terraform {
   required_providers {
     hcp = {
       source = "hashicorp/hcp"
-      version = "~> 0.102"
+      version = "0.102.0"
     }
     sops = {
       source = "carlpett/sops"
-      version = "~> 1.3"
+      version = "1.3.0"
     }
     scaleway = {
       source = "scaleway/scaleway"
-      version = "~> 2.69"
+      version = "2.70.1"
     }
   }
 }

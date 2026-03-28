@@ -10,15 +10,15 @@ terraform {
   required_providers {
     hcp = {
       source = "hashicorp/hcp"
-      version = "~> 0.102"
+      version = "0.102.0"
     }
     proxmox = {
       source = "bpg/proxmox"
-      version = "~> 0.93"
+      version = "0.93.0"
     }
     sops = {
       source = "carlpett/sops"
-      version = "~> 1.2"
+      version = "1.3.0"
     }
   }
 }
