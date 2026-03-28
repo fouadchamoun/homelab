@@ -14,7 +14,7 @@ spec:
   sources:
     - repoURL: https://kube-vip.github.io/helm-charts
       chart: kube-vip
-      targetRevision: 0.9.6
+      targetRevision: 0.9.7
       helm:
         releaseName: kube-vip
         valuesObject:
