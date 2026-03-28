@@ -10,23 +10,23 @@ terraform {
   required_providers {
     hcp = {
       source = "hashicorp/hcp"
-      version = "~> 0.102"
+      version = "0.102.0"
     }
     sops = {
       source = "carlpett/sops"
-      version = "~> 1.3"
+      version = "1.4.0"
     }
     kubernetes = {
       source = "hashicorp/kubernetes"
-      version = "~> 3"
+      version = "3.0.1"
     }
     helm = {
       source = "hashicorp/helm"
-      version = "~> 3"
+      version = "3.1.1"
     }
     argocd = {
       source = "argoproj-labs/argocd"
-      version = ">= 7"
+      version = "7.15.1"
     }
   }
 }
