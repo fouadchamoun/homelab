@@ -28,10 +28,20 @@
       "description": "Update versions based on renovate comments in files",
       "managerFilePatterns": ["**/*"],
       "matchStrings": [
-        "#\\s*renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?( minimumReleaseAge=(?<minimumReleaseAge>.*?))?\\s*\\w*:\\s*(?<currentValue>.*)"
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?)\\s*depName=(?<depName>.*?)(\\s*versioning=(?<versioning>.*?))?\\s*\\w*:\\s*(?<currentValue>.*)"
       ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
-      "minimumReleaseAge": "{{#if minimumReleaseAge}}{{{minimumReleaseAge}}}{{else}}7 days{{/if}}"
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Apply 30-day minimum release age for Talos and Kubernetes updates",
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": [
+        "siderolabs/talos",
+        "kubernetes/kubernetes"
+      ],
+      "minimumReleaseAge": "30 days"
     }
   ]
 }
