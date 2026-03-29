@@ -3,7 +3,7 @@ clusterName: fouadflix-talos
 # renovate: datasource=github-releases depName=siderolabs/talos
 talosVersion: v1.12.4
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-kubernetesVersion: v1.35.0
+kubernetesVersion: v1.35.2
 endpoint: https://talos.homelab.fouad.dev:6443
 allowSchedulingOnControlPlanes: true
 additionalApiServerCertSans:
