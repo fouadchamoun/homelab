@@ -1,8 +1,8 @@
 ---
 clusterName: fouadflix-talos
-# renovate: datasource=github-releases depName=siderolabs/talos versioning=semver minimumReleaseAge=30d
+# renovate: datasource=github-releases depName=siderolabs/talos versioning=semver minimumReleaseAge="30 days"
 talosVersion: v1.12.4
-# renovate: datasource=github-releases depName=kubernetes/kubernetes versioning=semver minimumReleaseAge=30d
+# renovate: datasource=github-releases depName=kubernetes/kubernetes versioning=semver minimumReleaseAge="30 days"
 kubernetesVersion: v1.35.0
 endpoint: https://talos.homelab.fouad.dev:6443
 allowSchedulingOnControlPlanes: true
