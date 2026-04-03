@@ -38,13 +38,13 @@ resource "proxmox_virtual_environment_vm" "haos_vm" {
   disk {
     datastore_id = "linstor-repl"
     # import_from  = "unraid_backups:import/haos_ova.qcow2"
-    file_format  = "raw"
-    discard      = "on"
-    interface    = "scsi0"
-    iothread     = true
-    ssd          = true
-    replicate    = false
-    size         = 64
+    file_format = "raw"
+    discard     = "on"
+    interface   = "scsi0"
+    iothread    = true
+    ssd         = true
+    replicate   = false
+    size        = 64
   }
 
   boot_order = [
@@ -69,4 +69,12 @@ resource "proxmox_virtual_environment_vm" "haos_vm" {
       disk[0].import_from,
     ]
   }
+}
+
+resource "proxmox_virtual_environment_haresource" "haos_vm" {
+  resource_id  = "vm:${proxmox_virtual_environment_vm.haos_vm.vm_id}"
+  state        = "started"
+  max_relocate = 1
+  max_restart  = 1
+  comment      = "Managed by Terraform"
 }
