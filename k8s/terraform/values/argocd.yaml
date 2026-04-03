@@ -1,12 +1,12 @@
 global:
   domain: argocd.homelab.fouad.dev
+  image:
+    repository: quay.io/argoproj/argocd
+    tag: v3.3.3
 
 configs:
   params:
     server.insecure: true
-
-redis-ha:
-  enabled: true
 
 controller:
   replicas: 3
