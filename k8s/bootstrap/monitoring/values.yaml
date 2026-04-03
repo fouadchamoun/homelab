@@ -26,6 +26,7 @@ destinations:
 
 clusterMetrics:
   enabled: true
+  collector: alloy-metrics
   windows-exporter:
     deploy: false
     enabled: false
@@ -59,8 +60,11 @@ clusterMetrics:
 
 clusterEvents:
   enabled: true
+  collector: alloy-logs
+
 annotationAutodiscovery:
   enabled: true
+  collector: alloy-metrics
   excludeNamespaces:
     - argocd
     - traefik
@@ -68,10 +72,14 @@ annotationAutodiscovery:
     scrape: prometheus.io/scrape
     metricsPath: prometheus.io/path  # Optional, if using path annotations
     metricsPortNumber: prometheus.io/port  # Optional, if using port annotations
+
 nodeLogs:
   enabled: false
+  collector: alloy-logs
+
 podLogs:
   enabled: true
+  collector: alloy-logs
   excludeNamespaces: []
 
 collectors:
