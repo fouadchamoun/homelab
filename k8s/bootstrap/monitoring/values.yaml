@@ -73,12 +73,15 @@ nodeLogs:
 podLogs:
   enabled: true
   excludeNamespaces: []
-alloy-metrics:
-  enabled: true
-alloy-singleton:
-  enabled: true
-alloy-logs:
-  enabled: true
+
+collectors:
+  alloy-metrics:
+    enabled: true
+  alloy-singleton:
+    enabled: true
+  alloy-logs:
+    enabled: true
+
 integrations:
   cert-manager:
     instances:
