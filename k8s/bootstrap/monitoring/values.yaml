@@ -24,6 +24,12 @@ destinations:
       name: grafana-cloud-secret
       namespace: monitoring
 
+telemetryServices:
+  kube-state-metrics:
+    deploy: true
+  node-exporter:
+    deploy: true
+
 clusterMetrics:
   enabled: true
   collector: alloy-metrics
