@@ -44,10 +44,10 @@
       "minimumReleaseAge": "30 days"
     },
     {
-      "description": "Use date versioning for homebridge Docker image",
+      "description": "Use regex versioning for homebridge Docker image date tags",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/homebridge/homebridge"],
-      "versioning": "date"
+      "versioning": "regex:^(?<major>\\d{4}-\\d{2})-(?<patch>\\d{2})$"
     }
   ]
 }
