@@ -42,6 +42,12 @@
         "kubernetes/kubernetes"
       ],
       "minimumReleaseAge": "30 days"
+    },
+    {
+      "description": "Use date versioning for homebridge Docker image",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/homebridge/homebridge"],
+      "versioning": "date"
     }
   ]
 }
