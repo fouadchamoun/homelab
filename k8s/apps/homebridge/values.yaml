@@ -1,6 +1,6 @@
 base-app:
   image:
-    repository: ghcr.io/homebridge/homebridge
+    repository: homebridge/homebridge
     tag: "2026-03-30"
   service:
     port: 8581
