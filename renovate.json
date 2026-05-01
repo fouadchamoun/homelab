@@ -17,6 +17,7 @@
   "prHourlyLimit": 0,
   "internalChecksFilter": "strict",
   "minimumReleaseAge": "7 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
   "argocd": {
     "managerFilePatterns": ["k8s/bootstrap/*"]
   },
