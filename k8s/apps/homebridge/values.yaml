@@ -1,7 +1,7 @@
 base-app:
   image:
     repository: ghcr.io/homebridge/homebridge
-    tag: "2026-03-07"
+    tag: "2026-03-30"
   service:
     port: 8581
   podSecurityContext: null
