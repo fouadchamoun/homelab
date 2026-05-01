@@ -13,7 +13,6 @@ base-app:
     enabled: true
     size: 1Gi
     mountPath: /homebridge
-    cloneFromNfsPath: /mnt/user/appdata/homebridge
   resources:
     requests:
       cpu: 500m
