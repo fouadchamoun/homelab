@@ -6,6 +6,7 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":ignoreModulesAndTests",
     ":separateMajorReleases",
+    ":separatePatchReleases",
     ":pinVersions",
     "replacements:all",
     "workarounds:all",
