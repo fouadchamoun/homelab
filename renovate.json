@@ -47,7 +47,7 @@
     {
       "description": "Use regex versioning for homebridge Docker image date tags",
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/homebridge/homebridge"],
+      "matchPackageNames": ["homebridge/homebridge"],
       "versioning": "regex:^(?<major>\\d{4}-\\d{2})-(?<patch>\\d{2})$"
     }
   ]
