@@ -26,6 +26,11 @@ controlPlane:
         hostDNS:
           enabled: true
           resolveMemberNames: true
+  - |-
+    machine:
+      kubelet:
+        extraConfig:
+          imageMaximumGCAge: 24h
 
 nodes:
   - hostname: talos-cp-00
