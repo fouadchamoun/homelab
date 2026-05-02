@@ -48,9 +48,23 @@ resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
   filters       = ["dns"]
   name          = "Traefik"
   precedence    = 1003363
-  traffic       = "any(dns.domains[*] in {\"unraid.fouad.dev\" \"home.fouad.dev\"}) and dns.location in {\"${cloudflare_zero_trust_dns_location.warp.id}\" \"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\"}"
+  traffic       = "any(dns.domains[*] == \"unraid.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.warp.id}\" \"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\"}"
   rule_settings = {
     override_ips = ["192.168.200.10"]
+  }
+}
+
+resource "cloudflare_zero_trust_gateway_policy" "override_hass_vm" {
+  account_id    = local.account_id
+  description   = ""
+  action        = "override"
+  enabled       = true
+  filters       = ["dns"]
+  name          = "hass-vm"
+  precedence    = 1004353
+  traffic       = "any(dns.domains[*] == \"hass-vm.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
+  rule_settings = {
+    override_ips = ["192.168.200.13"]
   }
 }
 
@@ -118,7 +132,7 @@ resource "cloudflare_zero_trust_gateway_policy" "override_talos_traefik_vip" {
   filters       = ["dns"]
   name          = "talos-traefik-vip"
   precedence    = 1006361
-  traffic       = "any(dns.domains[*] == \"homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
+  traffic       = "any(dns.domains[*] in {\"homelab.fouad.dev\" \"home.fouad.dev\"}) and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
   rule_settings = {
     override_ips = ["192.168.200.80"]
   }

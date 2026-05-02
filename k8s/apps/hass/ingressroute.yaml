@@ -1,0 +1,16 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hass
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - kind: Rule
+    match: "Host(`home.fouad.dev`)"
+    services:
+      - kind: Service
+        name: hass
+        port: 8123
+        scheme: http
