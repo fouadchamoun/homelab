@@ -6,6 +6,7 @@ image:  # @schema additionalProperties: false
 providers:
   kubernetesCRD:
     enabled: true
+    allowExternalNameServices: true
   kubernetesIngress:
     enabled: true
   kubernetesGateway:
