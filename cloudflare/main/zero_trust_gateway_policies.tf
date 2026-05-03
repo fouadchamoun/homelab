@@ -120,7 +120,7 @@ resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster_entrypoi
   precedence    = 1006360
   traffic       = "any(dns.domains[*] == \"talos.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
   rule_settings = {
-    override_ips = ["192.168.200.60", "192.168.200.61", "192.168.200.62"]
+    override_ips = ["192.168.200.70"]
   }
 }
 
