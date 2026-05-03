@@ -1,6 +1,4 @@
 terraform {
-  required_version = "1.14.9"
-
   cloud {
     organization = "fouadflix"
 
@@ -12,7 +10,7 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.18.0"
+      version = "5.19.0"
     }
     http = {
       source = "hashicorp/http"
