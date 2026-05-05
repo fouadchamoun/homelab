@@ -1,0 +1,10 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: ts-homelab-cidr
+spec:
+  replicas: 3
+  hostnamePrefix: ts-homelab-cidr
+  subnetRouter:
+    advertiseRoutes:
+      - "192.168.200.0/24"
