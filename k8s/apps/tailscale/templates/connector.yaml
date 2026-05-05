@@ -1,0 +1,12 @@
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-subnet-exit
+spec:
+  replicas: 1
+  hostname: k8s-subnet-exit
+  exitNode: true
+  subnetRouter:
+    advertiseRoutes:
+      - "192.168.200.0/24"
