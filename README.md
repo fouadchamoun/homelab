@@ -27,7 +27,7 @@ This repository contains the configuration for my personal homelab environment. 
 │   │   ├── 3-appset-pull-requests.yaml
 │   ├── charts
 │   │   └── base-app
-│   ├── talos # Talos config files for deploying a k8s cluster on PVE VMs
+│   ├── talos # Talos config (terraform) for deploying a k8s cluster on PVE VMs
 │   └── terraform # Terraform config for managing K8S ressources
 ├── pve # Proxmox Virtual Environment (PVE) cluster.
 │   ├── roles # Collection of ansible roles for configuring PVE nodes
