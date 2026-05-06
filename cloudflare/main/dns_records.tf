@@ -12,9 +12,22 @@ resource "cloudflare_dns_record" "redirect_root_to_blog" {
   }
 }
 
-resource "cloudflare_dns_record" "wildcard_oracle" {
-  content = "oracle.fouad.dev"
-  name    = "*.oracle.fouad.dev"
+resource "cloudflare_dns_record" "wildcard_homelab" {
+  content = "k8s-traefik.tail7157b.ts.net" # Tailscale Service: k8s-traefik
+  name    = "*.homelab.fouad.dev"
+  proxied = false
+  tags    = []
+  ttl     = 1
+  type    = "CNAME"
+  zone_id = local.zone_id
+  settings = {
+    flatten_cname = false
+  }
+}
+
+resource "cloudflare_dns_record" "hass" {
+  content = "k8s-traefik.tail7157b.ts.net" # Tailscale Service: k8s-traefik
+  name    = "home.fouad.dev"
   proxied = false
   tags    = []
   ttl     = 1
