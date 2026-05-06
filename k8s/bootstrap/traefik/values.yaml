@@ -15,9 +15,11 @@ providers:
 service:
   enabled: true
   type: LoadBalancer
-  loadBalancerIP: "192.168.200.80"
-  # externalTrafficPolicy: Local
-  # loadBalancerClass: kube-vip.io/kube-vip-class
+  # loadBalancerIP: "192.168.200.80"
+  loadBalancerClass: tailscale
+  annotations:
+    tailscale.com/proxy-group: ingress-proxies
+    tailscale.com/hostname: k8s-traefik
 
 deployment:
   enabled: true
