@@ -26,20 +26,6 @@ resource "cloudflare_zero_trust_gateway_policy" "block_lg_tv_updates" {
   traffic       = "any(dns.domains[*] == \"snu.lge.com\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\"}"
 }
 
-resource "cloudflare_zero_trust_gateway_policy" "override_oracle" {
-  account_id    = local.account_id
-  description   = ""
-  action        = "override"
-  enabled       = true
-  filters       = ["dns"]
-  name          = "oracle.fouad.dev"
-  precedence    = 1001363
-  traffic       = "dns.location in {\"${cloudflare_zero_trust_dns_location.warp.id}\" \"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\"} and any(dns.domains[*] == \"oracle.fouad.dev\")"
-  rule_settings = {
-    override_ips = ["10.0.0.64"]
-  }
-}
-
 resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
   account_id    = local.account_id
   description   = ""
@@ -121,19 +107,5 @@ resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster_entrypoi
   traffic       = "any(dns.domains[*] == \"talos.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
   rule_settings = {
     override_ips = ["192.168.200.70"]
-  }
-}
-
-resource "cloudflare_zero_trust_gateway_policy" "override_talos_traefik_vip" {
-  account_id    = local.account_id
-  description   = ""
-  action        = "override"
-  enabled       = true
-  filters       = ["dns"]
-  name          = "talos-traefik-vip"
-  precedence    = 1006361
-  traffic       = "any(dns.domains[*] in {\"homelab.fouad.dev\" \"home.fouad.dev\"}) and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
-  rule_settings = {
-    override_ips = ["192.168.200.80"]
   }
 }
