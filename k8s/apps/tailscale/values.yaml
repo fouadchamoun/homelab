@@ -1,0 +1,11 @@
+tailscale-operator:
+  installCRDs: true
+
+  operatorConfig:
+    image:
+      repository: tailscale/k8s-operator
+      tag: v1.96.5
+
+  ingressClass:
+    name: "tailscale"
+    enabled: true
