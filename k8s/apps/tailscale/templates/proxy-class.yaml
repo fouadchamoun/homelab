@@ -1,9 +1,0 @@
----
-apiVersion: tailscale.com/v1alpha1
-kind: ProxyClass
-metadata:
-  name: dns-policy-default
-spec:
-  statefulSet:
-    pod:
-      dnsPolicy: Default
