@@ -3,13 +3,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hass
-  annotations:
-    tailscale.com/expose: "true"
-    tailscale.com/hostname: hass
-    # https://github.com/tailscale/tailscale/issues/18154
-    # tailscale.com/proxy-group: ingress-proxies
 spec:
   type: ExternalName
-  externalName: hass.home # defined in Talos Machine Config extraHostEntries
+  externalName: hass.home # defined in CoreDNS config
   ports:
     - port: 8123
