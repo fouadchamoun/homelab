@@ -26,34 +26,6 @@ resource "cloudflare_zero_trust_gateway_policy" "block_lg_tv_updates" {
   traffic       = "any(dns.domains[*] == \"snu.lge.com\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\"}"
 }
 
-resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
-  account_id    = local.account_id
-  description   = ""
-  action        = "override"
-  enabled       = true
-  filters       = ["dns"]
-  name          = "Traefik"
-  precedence    = 1003363
-  traffic       = "any(dns.domains[*] == \"unraid.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.warp.id}\" \"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\"}"
-  rule_settings = {
-    override_ips = ["192.168.200.10"]
-  }
-}
-
-resource "cloudflare_zero_trust_gateway_policy" "override_hass_vm" {
-  account_id    = local.account_id
-  description   = ""
-  action        = "override"
-  enabled       = true
-  filters       = ["dns"]
-  name          = "hass-vm"
-  precedence    = 1004353
-  traffic       = "any(dns.domains[*] == \"hass-vm.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
-  rule_settings = {
-    override_ips = ["192.168.200.13"]
-  }
-}
-
 resource "cloudflare_zero_trust_gateway_policy" "override_pve_0" {
   account_id    = local.account_id
   description   = ""
