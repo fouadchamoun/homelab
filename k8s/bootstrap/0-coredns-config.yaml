@@ -25,6 +25,7 @@ data:
           ttl 30
         }
         hosts {
+          192.168.200.10 unraid.home
           192.168.200.13 hass.home
           fallthrough
         }
