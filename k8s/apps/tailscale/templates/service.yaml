@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unraid
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "unraid"
+    # https://github.com/tailscale/tailscale/issues/18154
+    # tailscale.com/proxy-group: "ingress-proxies"
+spec:
+  type: ExternalName
+  externalName: unraid.home # defined in CoreDNS config
