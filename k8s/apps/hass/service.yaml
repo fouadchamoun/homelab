@@ -6,7 +6,6 @@ metadata:
   annotations:
     tailscale.com/expose: "true"
     tailscale.com/hostname: hass
-    tailscale.com/proxy-class: "dns-policy-default"
     # https://github.com/tailscale/tailscale/issues/18154
     # tailscale.com/proxy-group: ingress-proxies
 spec:
