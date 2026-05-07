@@ -29,6 +29,8 @@ podAnnotations: {}
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
+podHostAliases: []
+
 # -- (map) securityContext applied to all pods
 podSecurityContext:
   # -- (bool) Indicates that the container must run as a non-root user.
