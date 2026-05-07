@@ -13,7 +13,7 @@ resource "cloudflare_dns_record" "redirect_root_to_blog" {
 }
 
 resource "cloudflare_dns_record" "wildcard_homelab" {
-  content = "k8s-traefik.tail7157b.ts.net" # Tailscale Service: k8s-traefik
+  content = "k8s-traefik.tail7157b.ts.net"
   name    = "*.homelab.fouad.dev"
   proxied = false
   tags    = []
@@ -26,8 +26,34 @@ resource "cloudflare_dns_record" "wildcard_homelab" {
 }
 
 resource "cloudflare_dns_record" "hass" {
-  content = "k8s-traefik.tail7157b.ts.net" # Tailscale Service: k8s-traefik
+  content = "k8s-traefik.tail7157b.ts.net"
   name    = "home.fouad.dev"
+  proxied = false
+  tags    = []
+  ttl     = 1
+  type    = "CNAME"
+  zone_id = local.zone_id
+  settings = {
+    flatten_cname = false
+  }
+}
+
+resource "cloudflare_dns_record" "wildcard_unraid" {
+  content = "unraid.tail7157b.ts.net"
+  name    = "*.unraid.fouad.dev"
+  proxied = false
+  tags    = []
+  ttl     = 1
+  type    = "CNAME"
+  zone_id = local.zone_id
+  settings = {
+    flatten_cname = false
+  }
+}
+
+resource "cloudflare_dns_record" "unraid" {
+  content = "unraid.tail7157b.ts.net"
+  name    = "unraid.fouad.dev"
   proxied = false
   tags    = []
   ttl     = 1
