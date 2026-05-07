@@ -139,6 +139,20 @@ ephemeral "talos_machine_configuration" "controlplane" {
       ip_cidr = "${each.value.ip}/24"
       ip_gateway = "192.168.200.1"
     }),
+    yamlencode({
+      machine = {
+        network = {
+          extraHostEntries = [
+            {
+              ip = "192.168.200.13"
+              aliases = [
+                "hass.home"
+              ]
+            }
+          ]
+        }
+      }
+    })
   ]
 }
 
