@@ -2,8 +2,8 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyClass
 metadata:
-  name: dns-policy-clusterfirst
+  name: dns-policy-default
 spec:
   statefulSet:
     pod:
-      dnsPolicy: ClusterFirst
+      dnsPolicy: Default
