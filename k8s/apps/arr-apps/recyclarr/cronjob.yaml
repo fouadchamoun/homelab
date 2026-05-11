@@ -21,7 +21,6 @@ spec:
             image: recyclarr/recyclarr:8.6.0
             imagePullPolicy: IfNotPresent
             securityContext:
-              readOnlyRootFilesystem: true
               privileged: false
               allowPrivilegeEscalation: false
               capabilities:
@@ -42,8 +41,6 @@ spec:
                 mountPath: /config
               - name: data
                 mountPath: /data
-              - name: cache
-                mountPath: /tmp
               - name: secret-sonarr
                 readOnly: true
                 mountPath: "/run/secrets/sonarr"
@@ -78,10 +75,6 @@ spec:
                   path: includes/radarr-4k.yml
           - name: data
             emptyDir: {}
-          - name: cache
-            emptyDir:
-              sizeLimit: 100Mi
-              medium: Memory
           - name: secret-sonarr
             secret:
               secretName: sonarr
