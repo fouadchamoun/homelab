@@ -81,3 +81,17 @@ resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster_entrypoi
     override_ips = ["192.168.200.70"]
   }
 }
+
+resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
+  account_id    = local.account_id
+  description   = ""
+  action        = "override"
+  enabled       = true
+  filters       = ["dns"]
+  name          = "sonarr"
+  precedence    = 1007360
+  traffic       = "any(dns.domains[*] in {\"unraid.fouad.dev\" \"homelab.fouad.dev\"}) and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\"}"
+  rule_settings = {
+    override_ips = ["192.168.200.10"]
+  }
+}
