@@ -6,7 +6,6 @@ resources:
 
 configMapGenerator:
 - name: recyclarr-config
-  behavior: merge
   options:
     disableNameSuffixHash: true
   files:
