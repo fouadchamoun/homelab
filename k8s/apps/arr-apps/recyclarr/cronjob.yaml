@@ -39,6 +39,8 @@ spec:
             volumeMounts:
               - name: recyclarr-config
                 mountPath: /config
+              - name: state
+                mountPath: /config/state
               - name: data
                 mountPath: /data
               - name: secret-sonarr
@@ -73,6 +75,8 @@ spec:
                   path: includes/radarr-requests.yml
                 - key: radarr-4k.yml
                   path: includes/radarr-4k.yml
+          - name: state
+            emptyDir: {}
           - name: data
             emptyDir: {}
           - name: secret-sonarr
