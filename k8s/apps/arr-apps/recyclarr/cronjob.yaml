@@ -63,6 +63,19 @@ spec:
           - name: recyclarr-config
             configMap:
               name: recyclarr-config
+              items:
+                - key: recyclarr.yml
+                  path: recyclarr.yml
+                - key: sonarr-main.yml
+                  path: includes/sonarr-main.yml
+                - key: sonarr-4k.yml
+                  path: includes/sonarr-4k.yml
+                - key: radarr-automated.yml
+                  path: includes/radarr-automated.yml
+                - key: radarr-requests.yml
+                  path: includes/radarr-requests.yml
+                - key: radarr-4k.yml
+                  path: includes/radarr-4k.yml
           - name: data
             emptyDir: {}
           - name: cache
