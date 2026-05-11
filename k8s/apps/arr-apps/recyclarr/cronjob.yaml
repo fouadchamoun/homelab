@@ -71,21 +71,16 @@ spec:
               medium: Memory
           - name: secret-sonarr
             secret:
-              namespace: arr-apps
               secretName: sonarr
           - name: secret-sonarr-4k
             secret:
-              namespace: arr-apps
               secretName: sonarr-4k
           - name: secret-radarr-requests
             secret:
-              namespace: arr-apps
               secretName: radarr-requests
           - name: secret-radarr-automated
             secret:
-              namespace: arr-apps
               secretName: radarr-automated
           - name: secret-radarr-4k
             secret:
-              namespace: arr-apps
               secretName: radarr-4k
