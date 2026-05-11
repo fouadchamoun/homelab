@@ -9,9 +9,9 @@ configMapGenerator:
   options:
     disableNameSuffixHash: true
   files:
-    - recyclarr.yml
-    - includes/sonarr-main.yml
-    - includes/sonarr-4k.yml
-    - includes/radarr-automated.yml
-    - includes/radarr-requests.yml
-    - includes/radarr-4k.yml
+    - assets/recyclarr.yml
+    - assets/includes/sonarr-main.yml
+    - assets/includes/sonarr-4k.yml
+    - assets/includes/radarr-automated.yml
+    - assets/includes/radarr-requests.yml
+    - assets/includes/radarr-4k.yml
