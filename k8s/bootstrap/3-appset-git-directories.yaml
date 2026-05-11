@@ -18,6 +18,8 @@ spec:
           - path: k8s/apps/*
           - path: k8s/apps/public-apps
             exclude: true
+          - path: k8s/apps/arr-apps
+            exclude: true
         values:
           namespace: '{{ .path.basename }}'
 
