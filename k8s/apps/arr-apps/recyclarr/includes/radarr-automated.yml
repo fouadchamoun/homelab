@@ -1,0 +1,89 @@
+# Quality Definition Configuration
+quality_definition:
+  type: sqp-streaming
+# Quality Profile Configuration
+quality_profiles:
+  - name: DEFAULT
+    reset_unmatched_scores:
+      enabled: false
+    upgrade:
+      allowed: true
+      until_quality: 1080p
+      until_score: 10000
+    min_format_score: 0
+    quality_sort: top
+    qualities:
+      - name: 1080p
+        qualities:
+          - WEBDL-1080p
+          - WEBRip-1080p
+          - Bluray-1080p
+          - HDTV-1080p
+      - name: 720p
+        qualities:
+          - WEBDL-720p
+          - WEBRip-720p
+          - Bluray-720p
+          - HDTV-720p
+# Set to 'true' to automatically remove custom formats from Radarr when they are removed from
+# the guide or your configuration. This will NEVER delete custom formats you manually created!
+delete_old_custom_formats: true
+replace_existing_custom_formats: true
+custom_formats:
+  # A list of custom formats to sync to Radarr.
+  # Use `recyclarr list custom-formats radarr` for values you can put here.
+  # https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/
+  - trash_ids:
+      - 5153ec7413d9dae44e24275589b5e944 # BHDStudio (1000)
+
+      - e7718d7a3ce595f289bfee26adc178f5 # Repack/Proper (5)
+      - ae43b294509409a6a13919dedd4764c4 # Repack2 (6)
+
+      # - dc98083864ea246d05a42df0d05f81cc # x265 (HD) (-10000)
+      - b6832f586342ef70d9c128d40c07b872 # Bad DUAL Groups (-10000)
+      - 90a6f9a284dff5103f6346090e6280c8 # LQ (-10000)
+      - e204b80c87be9497a8a6eaff48f72905 # LQ (Release Title) (-10000)
+      - b8cd450cbfa689c0259a01d9e29ba3d6 # 3D (-10000)
+      - bfd8eb01832d646a0a89c4deb46f8564 # Upscaled (-10000)
+      - 0a3f082873eb454bde444150b70253cc # Extras (-10000)
+      - b23eae459cc960816f2d6ba84af45055 # Dubs Only (-10000)
+    assign_scores_to:
+      - name: DEFAULT
+
+  - trash_ids:
+      - 493b6d1dbec3c3364c59d7607f7e3405 # HDR (500)
+    assign_scores_to:
+      - name: DEFAULT
+        score: -10000
+  - trash_ids:
+      - 185f1dd7264c4562b9022d963ac37424 # DD+ (1750)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 125
+  - trash_ids:
+      - 1af239278386be2919e1bcee0bde047e # DD+ ATMOS (3000)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 135
+  - trash_ids:
+      - c20f169ef63c5f40c2def54abaf4438e # WEB Tier 01 (1700)
+      - dc98083864ea246d05a42df0d05f81cc # x265 (HD) (-10000)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 900
+  - trash_ids:
+      - 403816d65392c79236dcb6dd591aeda4 # WEB Tier 02 (1650)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 850
+  - trash_ids:
+      - af94e0fe497124d1f9ce732069ec8c3b # WEB Tier 03 (1600)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 800
+  - trash_ids:
+      - 4b900e171accbfb172729b63323ea8ca # Multi (N/A)
+      - 404c08fd0bd67f39b4d8e5709319094e # VFF (N/A)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 1000

@@ -1,0 +1,91 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: recyclarr
+spec:
+  schedule: "0 9 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: recyclarr
+            image: recyclarr/recyclarr:7
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
+              privileged: false
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+            command:
+              - recyclarr
+              - sync
+            env:
+              - name: TZ
+                value: "Europe/Paris"
+              - name: RECYCLARR_CONFIG_DIR
+                value: "/config"
+              - name: RECYCLARR_DATA_DIR
+                value: "/data"
+            volumeMounts:
+              - name: recyclarr-config
+                mountPath: /config
+              - name: data
+                mountPath: /data
+              - name: cache
+                mountPath: /tmp
+              - name: secret-sonarr
+                readOnly: true
+                mountPath: "/run/secrets/sonarr"
+              - name: secret-sonarr-4k
+                readOnly: true
+                mountPath: "/run/secrets/sonarr-4k"
+              - name: secret-radarr-requests
+                readOnly: true
+                mountPath: "/run/secrets/radarr-requests"
+              - name: secret-radarr-automated
+                readOnly: true
+                mountPath: "/run/secrets/radarr-automated"
+              - name: secret-radarr-4k
+                readOnly: true
+                mountPath: "/run/secrets/radarr-4k"
+          volumes:
+          - name: recyclarr-config
+            configMap:
+              name: recyclarr-config
+          - name: data
+            emptyDir: {}
+          - name: cache
+            emptyDir:
+              sizeLimit: 100Mi
+              medium: Memory
+          - name: secret-sonarr
+            secret:
+              namespace: arr-apps
+              secretName: sonarr
+          - name: secret-sonarr-4k
+            secret:
+              namespace: arr-apps
+              secretName: sonarr-4k
+          - name: secret-radarr-requests
+            secret:
+              namespace: arr-apps
+              secretName: radarr-requests
+          - name: secret-radarr-automated
+            secret:
+              namespace: arr-apps
+              secretName: radarr-automated
+          - name: secret-radarr-4k
+            secret:
+              namespace: arr-apps
+              secretName: radarr-4k
