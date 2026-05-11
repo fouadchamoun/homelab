@@ -28,7 +28,6 @@ quality_profiles:
 # Set to 'true' to automatically remove custom formats from Radarr when they are removed from
 # the guide or your configuration. This will NEVER delete custom formats you manually created!
 delete_old_custom_formats: true
-replace_existing_custom_formats: true
 custom_formats:
   # A list of custom formats to sync to Radarr.
   # Use `recyclarr list custom-formats radarr` for values you can put here.

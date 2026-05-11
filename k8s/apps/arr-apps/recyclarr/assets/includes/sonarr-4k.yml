@@ -20,7 +20,6 @@ quality_profiles:
 # Set to 'true' to automatically remove custom formats from Sonarr when they are removed from
 # the guide or your configuration. This will NEVER delete custom formats you manually created!
 delete_old_custom_formats: true
-replace_existing_custom_formats: true
 custom_formats:
   # A list of custom formats to sync to Sonarr.
   # Use `recyclarr list custom-formats sonarr` for values you can put here.
