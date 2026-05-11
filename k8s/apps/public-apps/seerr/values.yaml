@@ -18,10 +18,3 @@ base-app:
     limits:
       cpu: 4000m
       memory: 1024Mi
-  podHostAliases:
-    - ip: "192.168.200.10"
-      hostnames:
-      - "sonarr.unraid.fouad.dev"
-      - "sonarr-4k.unraid.fouad.dev"
-      - "radarr-requests.unraid.fouad.dev"
-      - "radarr-4k.unraid.fouad.dev"
