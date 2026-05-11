@@ -1,0 +1,96 @@
+# Quality Definition Configuration
+# quality_definition:
+#   type: sqp-streaming
+# Quality Profile Configuration
+quality_profiles:
+  - name: DEFAULT
+    reset_unmatched_scores:
+      enabled: false
+    upgrade:
+      allowed: true
+      until_quality: WEB 2160p
+      until_score: 10000
+    min_format_score: 0
+    quality_sort: top
+    qualities:
+      - name: WEB 2160p
+        qualities:
+          - WEBDL-2160p
+          - WEBRip-2160p
+      - name: Bluray-2160p
+# Set to 'true' to automatically remove custom formats from Radarr when they are removed from
+# the guide or your configuration. This will NEVER delete custom formats you manually created!
+delete_old_custom_formats: true
+replace_existing_custom_formats: true
+custom_formats:
+  # A list of custom formats to sync to Radarr.
+  # Use `recyclarr list custom-formats radarr` for values you can put here.
+  # https://trash-guides.info/Radarr/Radarr-collection-of-custom-formats/
+  - trash_ids:
+      # HDR Formats
+      - 493b6d1dbec3c3364c59d7607f7e3405 # HDR (500)
+      - caa37d0df9c348912df1fb1d88f9273a # HDR10+ Boost (100)
+      - b337d6812e06c200ec9a2d3cfa9d20a7 # DV Boost (1000)
+      - f700d29429c023a5734505e77daeaea7 # DV (Disk) (101)
+      - 923b6abef9b17f937fab56cfcf89e1f1 # DV (w/o HDR fallback) (-10000)
+      - 9c38ebb7384dada637be8899efa68e6f # SDR (-10000)
+
+      - eecf3a857724171f968a66cb5719e152 # IMAX (800)
+      - 9f6cbff8cfe4ebbc1bde14c7b7bec0de # IMAX Enhanced (800)
+
+      - 5153ec7413d9dae44e24275589b5e944 # BHDStudio (1000)
+
+      - e7718d7a3ce595f289bfee26adc178f5 # Repack/Proper (5)
+      - ae43b294509409a6a13919dedd4764c4 # Repack2 (6)
+
+      - b8cd450cbfa689c0259a01d9e29ba3d6 # 3D (-10000)
+      - bfd8eb01832d646a0a89c4deb46f8564 # Upscaled (-10000)
+      - 0a3f082873eb454bde444150b70253cc # Extras (-10000)
+    assign_scores_to:
+      - name: DEFAULT
+
+  - trash_ids:
+      - 90a6f9a284dff5103f6346090e6280c8 # LQ (-10000)
+      - e204b80c87be9497a8a6eaff48f72905 # LQ (Release Title) (-10000)
+    assign_scores_to:
+      - name: DEFAULT
+        score: -150
+
+  - trash_ids:
+      - 185f1dd7264c4562b9022d963ac37424 # DD+ (1750)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 125
+  - trash_ids:
+      - 1af239278386be2919e1bcee0bde047e # DD+ ATMOS (3000)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 135
+  - trash_ids:
+      - 496f355514737f7d83bf7aa4d24f8169 # TrueHD ATMOS (5000)
+      - 3cafb66171b47f226146a0770576870f # TrueHD
+    assign_scores_to:
+      - name: DEFAULT
+        score: -10000
+
+  - trash_ids:
+      - c20f169ef63c5f40c2def54abaf4438e # WEB Tier 01 (1700)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 900
+  - trash_ids:
+      - 403816d65392c79236dcb6dd591aeda4 # WEB Tier 02 (1650)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 850
+  - trash_ids:
+      - af94e0fe497124d1f9ce732069ec8c3b # WEB Tier 03 (1600)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 800
+  - trash_ids:
+      - 4b900e171accbfb172729b63323ea8ca # Multi (N/A)
+      - 404c08fd0bd67f39b4d8e5709319094e # VFF (N/A)
+    assign_scores_to:
+      - name: DEFAULT
+        score: 10
