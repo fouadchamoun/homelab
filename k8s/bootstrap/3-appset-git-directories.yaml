@@ -29,6 +29,14 @@ spec:
         values:
           namespace: public-apps
 
+    - git:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        revision: main
+        directories:
+          - path: k8s/apps/arr-apps/*
+        values:
+          namespace: arr-apps
+
   # This sync policy pertains to the ApplicationSet, not to the Applications it creates.
   syncPolicy:
     # Prevents ApplicationSet controller from deleting Applications. Update is allowed
