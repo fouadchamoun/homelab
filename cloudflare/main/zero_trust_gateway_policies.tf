@@ -90,7 +90,7 @@ resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
   filters       = ["dns"]
   name          = "sonarr"
   precedence    = 1007360
-  traffic       = "any(dns.domains[*] in {\"unraid.fouad.dev\" \"homelab.fouad.dev\"}) and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\"}"
+  traffic       = "any(dns.domains[*] in {\"unraid.fouad.dev\"}) and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\"}"
   rule_settings = {
     override_ips = ["192.168.200.10"]
   }
