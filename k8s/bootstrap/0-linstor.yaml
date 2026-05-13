@@ -14,7 +14,7 @@ spec:
   sources:
     - repoURL: ghcr.io/piraeusdatastore/piraeus-operator
       chart: piraeus
-      targetRevision: 2.10.5
+      targetRevision: 2.10.7
       helm:
         releaseName: piraeus-operator
         valuesObject:
