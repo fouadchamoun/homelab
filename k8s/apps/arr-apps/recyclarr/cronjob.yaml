@@ -16,6 +16,28 @@ spec:
             fsGroup: 10001
             seccompProfile:
               type: RuntimeDefault
+          initContainers:
+            - name: init-config
+              image: recyclarr/recyclarr:8.6.0
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                privileged: false
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              command:
+                - sh
+                - -c
+                - |
+                  mkdir -p /config/includes
+                  cp -r /readonly-config/ /config/
+              volumeMounts:
+                - name: recyclarr-config
+                  mountPath: /readonly-config
+                  readOnly: true
+                - name: config
+                  mountPath: /config
           containers:
           - name: recyclarr
             image: recyclarr/recyclarr:8.6.0
@@ -40,7 +62,7 @@ spec:
             volumeMounts:
               - name: data
                 mountPath: /data
-              - name: recyclarr-config
+              - name: config
                 mountPath: /config
               - name: secret-sonarr
                 readOnly: true
@@ -58,6 +80,8 @@ spec:
                 readOnly: true
                 mountPath: "/run/secrets/radarr-4k"
           volumes:
+          - name: config
+            emptyDir: {}
           - name: data
             emptyDir: {}
           - name: recyclarr-config
