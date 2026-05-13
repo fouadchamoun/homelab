@@ -29,6 +29,7 @@ spec:
             command:
               - recyclarr
               - sync
+              - --preview
             env:
               - name: TZ
                 value: "Europe/Paris"
@@ -37,12 +38,10 @@ spec:
               - name: RECYCLARR_DATA_DIR
                 value: "/data"
             volumeMounts:
-              - name: recyclarr-config
-                mountPath: /config
-              - name: state
-                mountPath: /config/state
               - name: data
                 mountPath: /data
+              - name: recyclarr-config
+                mountPath: /config
               - name: secret-sonarr
                 readOnly: true
                 mountPath: "/run/secrets/sonarr"
@@ -59,6 +58,8 @@ spec:
                 readOnly: true
                 mountPath: "/run/secrets/radarr-4k"
           volumes:
+          - name: data
+            emptyDir: {}
           - name: recyclarr-config
             configMap:
               name: recyclarr-config
@@ -75,10 +76,6 @@ spec:
                   path: includes/radarr-requests.yml
                 - key: radarr-4k.yml
                   path: includes/radarr-4k.yml
-          - name: state
-            emptyDir: {}
-          - name: data
-            emptyDir: {}
           - name: secret-sonarr
             secret:
               secretName: sonarr
