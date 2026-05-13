@@ -21,7 +21,7 @@
     "managerFilePatterns": ["k8s/bootstrap/*"]
   },
   "kubernetes": {
-    "managerFilePatterns": ["k8s/**/manifests/*"]
+    "managerFilePatterns": ["k8s/**/*.yaml"]
   },
   "customManagers": [
     {
