@@ -42,9 +42,6 @@ hostMetrics:
 clusterMetrics:
   enabled: true
   collector: alloy-metrics
-  windows-exporter:
-    deploy: false
-    enabled: false
   cadvisor:
     enabled: true
     metricsTuning:
