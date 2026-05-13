@@ -21,24 +21,6 @@ spec:
             fsGroup: 10001
             seccompProfile:
               type: RuntimeDefault
-          initContainers:
-            - name: init-config
-              image: recyclarr/recyclarr:8.6.0
-              imagePullPolicy: IfNotPresent
-              securityContext:
-                privileged: false
-                allowPrivilegeEscalation: false
-                capabilities:
-                  drop:
-                    - ALL
-              command:
-                - sh
-                - -c
-                - |
-                  tree /config
-              volumeMounts:
-                - name: config
-                  mountPath: /config
           containers:
           - name: recyclarr
             image: recyclarr/recyclarr:8.6.0
@@ -52,9 +34,6 @@ spec:
             command:
               - recyclarr
               - sync
-              - --log
-              - debug
-              - --preview
             env:
               - name: TZ
                 value: "Europe/Paris"
