@@ -35,12 +35,8 @@ spec:
                 - sh
                 - -c
                 - |
-                  mkdir -p /config/includes
-                  cp -r /readonly-config/ /config/
+                  tree /config
               volumeMounts:
-                - name: recyclarr-config
-                  mountPath: /readonly-config
-                  readOnly: true
                 - name: config
                   mountPath: /config
           containers:
@@ -71,6 +67,11 @@ spec:
                 mountPath: /data
               - name: config
                 mountPath: /config
+              - name: recyclarr-config
+                mountPath: /config/recyclarr.yml
+                subPath: recyclarr.yml
+              - name: recyclarr-includes
+                mountPath: /config/includes
               - name: secret-sonarr
                 readOnly: true
                 mountPath: "/run/secrets/sonarr"
@@ -94,19 +95,9 @@ spec:
           - name: recyclarr-config
             configMap:
               name: recyclarr-config
-              items:
-                - key: recyclarr.yml
-                  path: recyclarr.yml
-                - key: sonarr-main.yml
-                  path: includes/sonarr-main.yml
-                - key: sonarr-4k.yml
-                  path: includes/sonarr-4k.yml
-                - key: radarr-automated.yml
-                  path: includes/radarr-automated.yml
-                - key: radarr-requests.yml
-                  path: includes/radarr-requests.yml
-                - key: radarr-4k.yml
-                  path: includes/radarr-4k.yml
+          - name: recyclarr-includes
+            configMap:
+              name: recyclarr-includes
           - name: secret-sonarr
             secret:
               secretName: sonarr
