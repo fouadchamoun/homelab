@@ -11,6 +11,8 @@ base-app:
     size: 500Mi
     mountPath: /opt/data
     # cloneFromNfsPath: /mnt/user/appdata/maintainerr
+  containerSecurityContext:
+    readOnlyRootFilesystem: false
   resources:
     requests:
       cpu: 500m
