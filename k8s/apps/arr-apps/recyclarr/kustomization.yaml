@@ -10,7 +10,6 @@ configMapGenerator:
     disableNameSuffixHash: true
   files:
     - assets/recyclarr.yml
-    - assets/configs/settings.yml
     - assets/includes/sonarr-main.yml
     - assets/includes/sonarr-4k.yml
     - assets/includes/radarr-automated.yml
