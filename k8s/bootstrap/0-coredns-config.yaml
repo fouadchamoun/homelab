@@ -25,6 +25,7 @@ data:
         rewrite name radarr-automated.homelab.fouad.dev unraid.home
         rewrite name radarr-requests.homelab.fouad.dev unraid.home
         rewrite name radarr-4k.homelab.fouad.dev unraid.home
+        rewrite name tautulli.homelab.fouad.dev unraid.home
 
         kubernetes cluster.local in-addr.arpa ip6.arpa {
           pods insecure
