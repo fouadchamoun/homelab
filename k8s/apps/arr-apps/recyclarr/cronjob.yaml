@@ -51,6 +51,8 @@ spec:
             command:
               - recyclarr
               - sync
+              - --log
+              - debug
               - --preview
             env:
               - name: TZ
