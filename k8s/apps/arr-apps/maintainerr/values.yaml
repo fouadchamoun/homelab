@@ -3,7 +3,7 @@ base-app:
     repository: maintainerr/maintainerr
     tag: 3.10.1
   service:
-    port: 8080
+    port: 6246
   ingressRoute:
     enabled: true
   pvc:
