@@ -30,18 +30,21 @@ telemetryServices:
   node-exporter:
     deploy: true
 
+hostMetrics:
+  enabled: true
+  linuxHosts:
+    enabled: true
+    metricsTuning:
+      useIntegrationAllowList: true
+      # excludeMetrics:
+      #   - my_metric_.*
+
 clusterMetrics:
   enabled: true
   collector: alloy-metrics
   windows-exporter:
     deploy: false
     enabled: false
-  node-exporter:
-    enabled: true
-    metricsTuning:
-      useIntegrationAllowList: true
-      # excludeMetrics:
-      #   - my_metric_.*
   cadvisor:
     enabled: true
     metricsTuning:
