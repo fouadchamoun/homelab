@@ -10,7 +10,7 @@ base-app:
     enabled: true
     size: 500Mi
     mountPath: /opt/data
-    cloneFromNfsPath: /mnt/user/appdata/maintainerr
+    # cloneFromNfsPath: /mnt/user/appdata/maintainerr
   resources:
     requests:
       cpu: 500m
