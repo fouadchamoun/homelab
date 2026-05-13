@@ -1,7 +1,7 @@
 base-app:
   image:
     repository: maintainerr/maintainerr
-    tag: v3.10.1
+    tag: 3.10.1
   service:
     port: 8080
   ingressRoute:
@@ -10,7 +10,7 @@ base-app:
     enabled: true
     size: 500Mi
     mountPath: /opt/data
-    cloneFromNfsPath: /mnt/user/appdata/maintainerr
+    # cloneFromNfsPath: /mnt/user/appdata/maintainerr
   resources:
     requests:
       cpu: 500m
