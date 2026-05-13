@@ -91,6 +91,8 @@ podLogs:
 collectors:
   alloy-metrics:
     enabled: true
+    presets:
+      - clustered
   alloy-logs:
     enabled: true
 
