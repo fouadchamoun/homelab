@@ -41,8 +41,6 @@ spec:
                 mountPath: /config
               - name: state
                 mountPath: /config/state
-              - name: configs
-                mountPath: /config/configs
               - name: data
                 mountPath: /data
               - name: secret-sonarr
@@ -78,8 +76,6 @@ spec:
                 - key: radarr-4k.yml
                   path: includes/radarr-4k.yml
           - name: state
-            emptyDir: {}
-          - name: configs
             emptyDir: {}
           - name: data
             emptyDir: {}
