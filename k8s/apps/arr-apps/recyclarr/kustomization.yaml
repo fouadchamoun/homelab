@@ -4,12 +4,16 @@ kind: Kustomization
 resources:
 - cronjob.yaml
 
+generatorOptions:
+  disableNameSuffixHash: true
+
 configMapGenerator:
 - name: recyclarr-config
-  options:
-    disableNameSuffixHash: true
   files:
     - assets/recyclarr.yml
+
+- name: recyclarr-includes
+  files:
     - assets/includes/sonarr-main.yml
     - assets/includes/sonarr-4k.yml
     - assets/includes/radarr-automated.yml
