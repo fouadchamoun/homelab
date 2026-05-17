@@ -72,5 +72,6 @@ tlsStore:
 logs:
   general:
     level: INFO
+    format: json
   access:
     enabled: true
