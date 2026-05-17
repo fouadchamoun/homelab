@@ -38,3 +38,76 @@ spec:
       - PruneLast=true
       - ServerSideApply=true
       - FailOnSharedResource=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: signoz
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: signoz
+  sources:
+  - repoURL: https://charts.signoz.io
+    chart: signoz
+    targetRevision: 0.124.0
+    helm:
+      valuesObject:
+        global:
+          clusterName: talos
+          storageClass: linstor-replicated
+        signoz:
+          replicaCount: 1
+          ingress:
+            enabled: true
+            className: traefik
+            hosts:
+              - host: signoz.homelab.fouad.dev
+                paths:
+                  - path: /
+                    pathType: ImplementationSpecific
+                    port: 8080
+  - repoURL: https://charts.signoz.io
+    chart: k8s-infra
+    targetRevision: 0.16.0
+    helm:
+      valuesObject:
+        global:
+          clusterName: talos
+          deploymentEnvironment: prod
+          storageClass: linstor-replicated
+        otelCollectorEndpoint: http://signoz-otel-collector:4318
+        otelInsecure: true
+        # presets:
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels: # The labels to set on the application namespace
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - kind: StatefulSet
+      group: "*"
+      jqPathExpressions:
+        - .spec.volumeClaimTemplates[].kind
+        - .spec.volumeClaimTemplates[].apiVersion
+    - kind: Deployment
+      group: "*"
+      name: signoz-clickhouse-operator
+      jqPathExpressions:
+        - .spec.template.spec.containers[].env[].valueFrom.resourceFieldRef.divisor
