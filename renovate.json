@@ -64,7 +64,7 @@
     },
     {
       "matchDatasources": ["deb"],
-      "matchPackageNames": ["linstor"],
+      "matchPackageNames": ["/linstor/"],
       "groupName": "linstor",
       "minimumReleaseAge": null
     }
