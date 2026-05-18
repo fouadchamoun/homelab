@@ -32,6 +32,16 @@
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?)\\s*depName=(?<depName>.*?)(\\s*versioning=(?<versioning>.*?))?\\s*\\s*\\w+\\s*=\\s*\"?(?<currentValue>[^\"]+)\"?"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Update debian packages based on renovate comments in files",
+      "managerFilePatterns": ["**/roles/**/tasks/*"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*(?:registry=(?<registry>\\S+)\\s+)?(?:suite=(?<suite>\\S+)\\s+)?(?:components=(?<components>\\S+)\\s+)?(?:binaryArch=(?<binaryArch>\\S+)\\s+)?-\\s*(?<depName>\\S+?)=(?<currentValue>\\S+)"
+      ],
+      "registryUrlTemplate": "{{#if registry}}{{registry}}{{else}}https://deb.debian.org/debian{{/if}}?suite={{#if suite}}{{suite}}{{else}}stable{{/if}}&components={{#if components}}{{components}}{{else}}main,contrib,non-free{{/if}}&binaryArch={{#if binaryArch}}{{binaryArch}}{{else}}amd64{{/if}}",
+      "datasourceTemplate": "deb"
     }
   ],
   "packageRules": [
