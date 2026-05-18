@@ -31,12 +31,13 @@ jobs:
           docker run \
             --network=host \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd)/main/.github/workflows/assets/argocd:/argocd-config \
             -v $(pwd)/main:/base-branch \
             -v $(pwd)/pull-request:/target-branch \
             -v $(pwd)/output:/output \
             -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
             -e REPO=${{ github.repository }} \
-            dagandersen/argocd-diff-preview:v0.2.7
+            dagandersen/argocd-diff-preview:v0.2.7 --argocd-config-dir /argocd-config
 
       - name: Post diff as comment
         run: |
