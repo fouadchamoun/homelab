@@ -64,9 +64,28 @@
     },
     {
       "matchDatasources": ["deb"],
-      "matchPackageNames": ["/linstor/"],
-      "groupName": "linstor",
       "minimumReleaseAge": null
+    },
+    {
+      "matchDatasources": ["deb"],
+      "matchPackageNames": [
+        "linstor-controller",
+        "linstor-satellite"
+      ],
+      "groupName": "linstor",
+      "changelogUrl": "https://github.com/LINBIT/linstor-server/blob/master/CHANGELOG.md"
+    },
+    {
+      "matchPackageNames": ["linstor-proxmox"],
+      "changelogUrl": "https://github.com/LINBIT/linstor-proxmox/blob/master/CHANGELOG.md"
+    },
+    {
+      "matchPackageNames": ["linstor-gui"],
+      "changelogUrl": "https://github.com/LINBIT/linstor-gui/blob/main/CHANGELOG.md"
+    },
+    {
+      "matchPackageNames": ["linstor-client"],
+      "changelogUrl": "https://github.com/LINBIT/linstor-client/blob/master/CHANGELOG.md"
     }
   ]
 }
