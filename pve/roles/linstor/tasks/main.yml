@@ -38,7 +38,7 @@
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
       - linstor-gui=2.4.0-1
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
-      - drbd-reactor=1.10.0-1
+      - drbd-reactor=1.11.0-1
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
       - thin-send-recv=1.1.3-1
 
