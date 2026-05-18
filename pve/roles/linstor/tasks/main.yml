@@ -27,7 +27,6 @@
   ansible.builtin.apt:
     state: present
     name:
-      # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
       - linstor-controller=1.33.1-1
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
       - linstor-satellite=1.33.1-1
