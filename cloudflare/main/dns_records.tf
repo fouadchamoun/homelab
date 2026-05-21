@@ -12,6 +12,22 @@ resource "cloudflare_dns_record" "redirect_root_to_blog" {
   }
 }
 
+resource "cloudflare_dns_record" "talos_endpoint" {
+  for_each = toset([
+    "192.168.200.60",
+    "192.168.200.61",
+    "192.168.200.62"
+  ])
+
+  content = each.value
+  name    = "talos.homelab.fouad.dev"
+  proxied = false
+  tags    = []
+  ttl     = 1
+  type    = "A"
+  zone_id = local.zone_id
+}
+
 resource "cloudflare_dns_record" "wildcard_homelab" {
   content = "k8s-traefik.tail7157b.ts.net"
   name    = "*.homelab.fouad.dev"

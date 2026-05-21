@@ -1,13 +1,11 @@
 locals {
   cluster_name = "fouadflix-talos"
+  cluster_endpoint = "https://talos.homelab.fouad.dev:6443"
 
   # renovate: datasource=github-releases depName=siderolabs/talos
   talos_version = "v1.13.0"
   # renovate: datasource=github-releases depName=kubernetes/kubernetes
   kubernetes_version = "v1.35.0"
-
-  cluster_endpoint = "https://talos.homelab.fouad.dev:6443"
-  talos_vip = "192.168.200.70"
 
   nodes = {
     controlplane = {

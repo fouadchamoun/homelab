@@ -48,7 +48,7 @@ ephemeral "talos_client_configuration" "this" {
 
   not_before      = terraform_data.not_before.output
 
-  endpoints       = [local.talos_vip]
+  endpoints       = [for node in local.nodes.controlplane : node.ip]
   nodes           = [for node in local.nodes.controlplane : node.ip]
 }
 
@@ -87,17 +87,24 @@ ephemeral "talos_machine_configuration" "controlplane" {
   machine_secrets  = local.machine_secrets
 
   machine_type     = "controlplane"
-  talos_version    = "v1.13.0"
-  kubernetes_version = "v1.35.0"
+  talos_version    = local.talos_version
+  kubernetes_version = local.kubernetes_version
 
   config_patches = [
     yamlencode({
       cluster = {
         allowSchedulingOnControlPlanes = true
         apiServer = {
-          certSANs = [
-            "talos.homelab.fouad.dev"
-          ]
+          extraArgs = {
+            default-not-ready-toleration-seconds = "30"
+            default-unreachable-toleration-seconds = "30"
+          }
+        }
+        controllerManager = {
+          extraArgs = {
+            node-monitor-period = "2s"
+            node-monitor-grace-period = "20s"
+          }
         }
       }
     }),
@@ -123,6 +130,9 @@ ephemeral "talos_machine_configuration" "controlplane" {
         kubelet = {
           extraConfig = {
             imageMaximumGCAge = "24h"
+          }
+          extraArgs = {
+            node-status-update-frequency = "4s"
           }
         }
         features = {
