@@ -1,8 +1,5 @@
 global:
   domain: argocd.homelab.fouad.dev
-  image:
-    repository: quay.io/argoproj/argocd
-    tag: v3.3.9
 
 configs:
   params:
