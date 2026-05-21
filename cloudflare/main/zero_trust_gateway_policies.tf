@@ -68,20 +68,6 @@ resource "cloudflare_zero_trust_gateway_policy" "override_pve_2" {
   }
 }
 
-resource "cloudflare_zero_trust_gateway_policy" "override_talos_cluster_entrypoint" {
-  account_id    = local.account_id
-  description   = ""
-  action        = "override"
-  enabled       = true
-  filters       = ["dns"]
-  name          = "talos-cluster"
-  precedence    = 1006360
-  traffic       = "any(dns.domains[*] == \"talos.homelab.fouad.dev\") and dns.location in {\"${cloudflare_zero_trust_dns_location.freebox.id}\" \"${cloudflare_zero_trust_dns_location.tailscale.id}\" \"${cloudflare_zero_trust_dns_location.warp.id}\"}"
-  rule_settings = {
-    override_ips = ["192.168.200.70"]
-  }
-}
-
 resource "cloudflare_zero_trust_gateway_policy" "override_unraid" {
   account_id    = local.account_id
   description   = ""
