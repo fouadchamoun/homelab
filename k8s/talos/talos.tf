@@ -48,7 +48,7 @@ ephemeral "talos_client_configuration" "this" {
 
   not_before      = terraform_data.not_before.output
 
-  endpoints       = [local.talos_vip]
+  endpoints       = [for node in local.nodes.controlplane : node.ip]
   nodes           = [for node in local.nodes.controlplane : node.ip]
 }
 
