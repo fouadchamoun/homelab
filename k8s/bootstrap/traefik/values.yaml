@@ -1,8 +1,4 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/traefik/traefik-helm-chart/refs/heads/master/traefik/values.schema.json
-image:  # @schema additionalProperties: false
-  repository: traefik
-  tag: v3.7.1
-
 providers:
   kubernetesCRD:
     enabled: true
