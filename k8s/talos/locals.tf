@@ -1,6 +1,7 @@
 locals {
-  cluster_name = "fouadflix-talos"
-  cluster_endpoint = "https://talos.homelab.fouad.dev:6443"
+  cluster_name      = "fouadflix-talos"
+  cluster_endpoint  = "https://talos.homelab.fouad.dev:6443"
+  cluster_vip       = "192.168.200.70"
 
   # renovate: datasource=github-releases depName=siderolabs/talos
   talos_version = "v1.13.0"

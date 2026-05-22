@@ -27,3 +27,8 @@ addresses:
   - address: ${ip_cidr}
 routes:
   - gateway: ${ip_gateway}
+---
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+link: ethSel0 # Name of the link to assign the VIP to.
+name: ${ip_vip} # IP address to be advertised as a Layer 2 VIP.
