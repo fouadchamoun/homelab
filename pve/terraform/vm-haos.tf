@@ -26,7 +26,7 @@ resource "proxmox_virtual_environment_vm" "haos_vm" {
   }
 
   memory {
-    dedicated = 4096
+    dedicated = 2048
   }
 
   efi_disk {
@@ -41,7 +41,7 @@ resource "proxmox_virtual_environment_vm" "haos_vm" {
     file_format = "raw"
     discard     = "on"
     interface   = "scsi0"
-    iothread    = true
+    iothread    = false
     ssd         = true
     replicate   = false
     size        = 64
@@ -77,4 +77,21 @@ resource "proxmox_virtual_environment_haresource" "haos_vm" {
   max_relocate = 1
   max_restart  = 1
   comment      = "Managed by Terraform"
+}
+
+# Node Affinity Rule: assign VMs to preferred nodes with priorities.
+resource "proxmox_harule" "haos_vm_node_affinity" {
+  rule      = "haos-vm-prefer-pve-0"
+  type      = "node-affinity"
+  comment   = "Prefer pve-0 for HAOS VM"
+  resources = ["vm:${proxmox_virtual_environment_vm.haos_vm.vm_id}"]
+
+  nodes = {
+    pve-0 = 2 # Higher priority
+    pve-1 = 1
+    pve-2 = 1
+  }
+
+  # Non-strict rules allow failover to other nodes; strict rules do not.
+  strict = false
 }
