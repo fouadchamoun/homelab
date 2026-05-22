@@ -111,3 +111,53 @@ spec:
       name: signoz-clickhouse-operator
       jqPathExpressions:
         - .spec.template.spec.containers[].env[].valueFrom.resourceFieldRef.divisor
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kite
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kite-system
+  sources:
+  - repoURL: ghcr.io/kite-org/charts
+    chart: kite
+    targetRevision: 0.12.1
+    helm:
+      valuesObject:
+        host: kite.homelab.fouad.dev
+        db:
+          sqlite:
+            persistence:
+              pvc:
+                enabled: true
+                storageClass: linstor-replicated
+                size: 1Gi
+        ingress:
+          enabled: true
+          className: traefik
+          hosts:
+            - host: kite.homelab.fouad.dev
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels: # The labels to set on the application namespace
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
