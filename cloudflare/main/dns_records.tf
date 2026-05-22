@@ -28,6 +28,16 @@ resource "cloudflare_dns_record" "talos_endpoint" {
   zone_id = local.zone_id
 }
 
+resource "cloudflare_dns_record" "k8s_api" {
+  content = "192.168.200.70"
+  name    = "k8s.homelab.fouad.dev"
+  proxied = false
+  tags    = []
+  ttl     = 1
+  type    = "A"
+  zone_id = local.zone_id
+}
+
 resource "cloudflare_dns_record" "wildcard_homelab" {
   content = "k8s-traefik.tail7157b.ts.net"
   name    = "*.homelab.fouad.dev"

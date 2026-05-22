@@ -99,6 +99,9 @@ ephemeral "talos_machine_configuration" "controlplane" {
             default-not-ready-toleration-seconds = "30"
             default-unreachable-toleration-seconds = "30"
           }
+          certSANs = [
+            "k8s.homelab.fouad.dev"
+          ]
         }
         controllerManager = {
           extraArgs = {
@@ -148,6 +151,7 @@ ephemeral "talos_machine_configuration" "controlplane" {
       hostname = each.key
       ip_cidr = "${each.value.ip}/24"
       ip_gateway = "192.168.200.1"
+      ip_vip = local.cluster_vip
     })
   ]
 }
