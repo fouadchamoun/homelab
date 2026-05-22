@@ -69,9 +69,9 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   }
 }
 
-data "proxmox_virtual_environment_file" "talos_iso" {
-  node_name    = "pve-0"
-  datastore_id = "unraid_isos"
-  content_type = "iso"
-  file_name    = "nocloud-amd64.iso"
-}
+# data "proxmox_virtual_environment_file" "talos_iso" {
+#   node_name    = "pve-0"
+#   datastore_id = "unraid_isos"
+#   content_type = "iso"
+#   file_name    = "nocloud-amd64.iso"
+# }
