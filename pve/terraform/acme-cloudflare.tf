@@ -1,4 +1,4 @@
-resource "proxmox_virtual_environment_acme_dns_plugin" "cloudflare" {
+resource "proxmox_acme_dns_plugin" "cloudflare" {
   api    = "cf"
   plugin = "cloudflare"
   validation_delay = 0
