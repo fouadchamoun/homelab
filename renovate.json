@@ -68,9 +68,10 @@
     },
     {
       "matchDatasources": ["git-tags"],
-      "matchPackagePatterns": ["https://github.com/.*"],
       "overrideDatasource": "github-tags",
-      "overridePackageName": "{{sourceRepo}}"
+      "matchPackageNames": [
+        "/https://github.com/.*/"
+      ]
     },
     {
       "matchPackageNames": [
