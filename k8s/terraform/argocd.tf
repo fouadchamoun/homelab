@@ -60,13 +60,13 @@ resource "argocd_project" "cluster_bootstrap" {
 
     source_repos = [
       "https://github.com/fouadchamoun/homelab.git",
-      "https://kube-vip.github.io/helm-charts",
       "ghcr.io/piraeusdatastore/piraeus-operator",
       "ghcr.io/piraeusdatastore/helm-charts",
       "quay.io/jetstack/charts",
       "https://charts.external-secrets.io",
       "https://traefik.github.io/charts",
-      "https://grafana.github.io/helm-charts"
+      "https://charts.signoz.io",
+      "ghcr.io/kite-org/charts"
     ]
 
     cluster_resource_whitelist {
@@ -100,7 +100,11 @@ resource "argocd_project" "cluster_bootstrap" {
     }
     destination {
       server = "https://kubernetes.default.svc"
-      namespace = "monitoring"
+      namespace = "signoz"
+    }
+    destination {
+      server = "https://kubernetes.default.svc"
+      namespace = "kite-system"
     }
   }
 }

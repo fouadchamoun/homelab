@@ -58,7 +58,7 @@ spec:
         namespace: "{{ .values.namespace }}"
       syncPolicy:
         automated:
-          prune: false
+          prune: true
           allowEmpty: false
           selfHeal: false
         managedNamespaceMetadata:

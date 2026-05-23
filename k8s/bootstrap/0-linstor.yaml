@@ -109,10 +109,6 @@ spec:
           volumeGroupSnapshotClasses: []
 
   syncPolicy:
-    automated: null
-      # prune: false
-      # allowEmpty: false
-      # selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
