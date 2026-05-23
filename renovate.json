@@ -67,6 +67,12 @@
       "minimumReleaseAge": null
     },
     {
+      "matchDatasources": ["git-tags"],
+      "matchPackagePatterns": ["https://github.com/.*"],
+      "overrideDatasource": "github-tags",
+      "overridePackageName": "{{sourceRepo}}"
+    },
+    {
       "matchPackageNames": [
         "https://github.com/argoproj/argo-cd",
         "argo-cd"
