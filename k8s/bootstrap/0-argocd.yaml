@@ -1,0 +1,74 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-crds
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: cluster-bootstrap
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  source:
+    repoURL: https://github.com/argoproj/argo-cd
+    path: manifests/crds
+    targetRevision: v3.4.1
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: cluster-bootstrap
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 9.5.13
+    helm:
+      valuesObject:
+        crds:
+          install: false
+        global:
+          domain: argocd.homelab.fouad.dev
+        configs:
+          params:
+            server.insecure: true
+          cm:
+            kustomize.buildOptions: --enable-helm
+        controller:
+          replicas: 3
+        repoServer:
+          replicas: 3
+        applicationSet:
+          replicas: 3
+        server:
+          replicas: 3
+          ingress:
+            enabled: true
+            ingressClassName: traefik

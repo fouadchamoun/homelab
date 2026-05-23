@@ -60,6 +60,8 @@ resource "argocd_project" "cluster_bootstrap" {
 
     source_repos = [
       "https://github.com/fouadchamoun/homelab.git",
+      "https://github.com/argoproj/argo-cd",
+      "https://argoproj.github.io/argo-helm",
       "ghcr.io/piraeusdatastore/piraeus-operator",
       "ghcr.io/piraeusdatastore/helm-charts",
       "quay.io/jetstack/charts",
