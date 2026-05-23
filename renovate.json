@@ -69,7 +69,6 @@
     {
       "matchDatasources": ["git-tags"],
       "overrideDatasource": "github-tags",
-      "overridePackageName": "{{sourceRepo}}",
       "matchPackageNames": [
         "/https://github.com/.*/"
       ]
