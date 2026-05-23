@@ -61,6 +61,8 @@ spec:
             server.insecure: true
           cm:
             kustomize.buildOptions: --enable-helm
+          secrets:
+            createSecret: false
         controller:
           replicas: 3
         repoServer:
