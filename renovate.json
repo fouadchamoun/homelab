@@ -63,15 +63,8 @@
       "separateMinorPatch": false
     },
     {
-      "matchDatasources": ["deb"],
+      "matchDatasources": ["deb", "git-tags"],
       "minimumReleaseAge": null
-    },
-    {
-      "matchDatasources": ["git-tags"],
-      "overrideDatasource": "github-tags",
-      "matchPackageNames": [
-        "/https://github.com/.*/"
-      ]
     },
     {
       "matchPackageNames": [
