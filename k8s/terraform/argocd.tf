@@ -30,7 +30,6 @@ resource "kubernetes_secret_v1" "argocd_secret" {
 
 resource "argocd_project" "cluster_bootstrap" {
   depends_on = [
-    helm_release.argocd,
     kubernetes_secret_v1.scw_sm_secret
   ]
 

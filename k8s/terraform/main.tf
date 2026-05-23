@@ -20,10 +20,6 @@ terraform {
       source = "hashicorp/kubernetes"
       version = "3.1.0"
     }
-    helm = {
-      source = "hashicorp/helm"
-      version = "3.1.1"
-    }
     argocd = {
       source = "argoproj-labs/argocd"
       version = "7.15.3"
@@ -37,12 +33,6 @@ provider "sops" {}
 
 provider "kubernetes" {
   config_path = "~/.kube/configs/fouadflix-talos"
-}
-
-provider "helm" {
-  kubernetes = {
-    config_path = "~/.kube/configs/fouadflix-talos"
-  }
 }
 
 provider "argocd" {
