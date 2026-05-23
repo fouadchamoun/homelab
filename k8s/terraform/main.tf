@@ -40,3 +40,7 @@ provider "argocd" {
   username    = "admin"
   password    = ephemeral.sops_file.secrets.data["argocd.admin-password"]
 }
+
+ephemeral "sops_file" "secrets" {
+  source_file = "secrets.sops.yaml"
+}
