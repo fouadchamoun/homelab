@@ -20,10 +20,6 @@ terraform {
       source = "hashicorp/kubernetes"
       version = "3.1.0"
     }
-    helm = {
-      source = "hashicorp/helm"
-      version = "3.1.1"
-    }
     argocd = {
       source = "argoproj-labs/argocd"
       version = "7.15.3"
@@ -39,14 +35,12 @@ provider "kubernetes" {
   config_path = "~/.kube/configs/fouadflix-talos"
 }
 
-provider "helm" {
-  kubernetes = {
-    config_path = "~/.kube/configs/fouadflix-talos"
-  }
-}
-
 provider "argocd" {
   server_addr = "argocd.homelab.fouad.dev"
   username    = "admin"
   password    = ephemeral.sops_file.secrets.data["argocd.admin-password"]
+}
+
+ephemeral "sops_file" "secrets" {
+  source_file = "secrets.sops.yaml"
 }
