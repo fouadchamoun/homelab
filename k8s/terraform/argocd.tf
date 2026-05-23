@@ -28,22 +28,6 @@ resource "kubernetes_secret_v1" "argocd_secret" {
   }
 }
 
-resource "helm_release" "argocd" {
-  depends_on = [ kubernetes_secret_v1.argocd_secret ]
-
-  name             = "argocd"
-  namespace        = kubernetes_namespace_v1.argocd.metadata[0].name
-  create_namespace = true # not needed anymore
-
-  repository       = "https://argoproj.github.io/argo-helm"
-  chart            = "argo-cd"
-  version          = "9.5.13"
-
-  values = [
-    file("assets/argocd/values.yaml")
-  ]
-}
-
 resource "argocd_project" "cluster_bootstrap" {
   depends_on = [
     helm_release.argocd,
