@@ -1,0 +1,10 @@
+---
+apiVersion: v2
+type: application
+name: hermes-agent
+version: 0.1.0
+
+dependencies:
+  - name: hermes-agent
+    repository: https://github.com/fouadchamoun/hermes-agent-helm-chart.git
+    version: 276b637762ef7accd8578a5e9b23fa8c71915810
