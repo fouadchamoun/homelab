@@ -9,36 +9,54 @@ metadata:
     argocd-diff-preview/render: never
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
 
   generators:
-  - pullRequest:
-      github:
-        owner: fouadchamoun
-        repo: homelab
-        labels:
-        - argocd
-      filters:
-      - targetBranchMatch: "main"
-      values:
-        appName: '{{ regexReplaceAll ".*\\(app:(.*?)\\).*" .title "${1}" }}'
+    - matrix:
+        generators:
+          - pullRequest:
+              github:
+                owner: fouadchamoun
+                repo: homelab
+                labels:
+                  - argocd
+              filters:
+                - targetBranchMatch: "main"
+              values:
+                head_sha: "{{ .head_sha }}"
+                appName: '{{ regexReplaceAll ".*\\(app:(.*?)\\).*" .title "${1}" }}'
+
+          - merge:
+              mergeKeys:
+                - path.path # join on the app directory path
+              generators:
+                - git:
+                    repoURL: https://github.com/fouadchamoun/homelab.git
+                    revision: "{{ .values.head_sha }}"
+                    directories:
+                      - path: k8s/apps/{{ .values.appName }}
+                # PATCH: optional per-app overrides from argocd-patch.yaml
+                - git:
+                    repoURL: https://github.com/fouadchamoun/homelab.git
+                    revision: "{{ .values.head_sha }}"
+                    files:
+                      - path: "k8s/apps/{{ .values.appName }}/argocd-patch.yaml"
 
   template:
     metadata:
-      name: '{{ .values.appName }}-pr-{{ .number }}'
+      name: "{{ .values.appName }}-pr-{{ .number }}"
     spec:
       project: default
       source:
         repoURL: https://github.com/fouadchamoun/homelab.git
-        targetRevision: '{{ .head_sha }}'
-        path: 'k8s/apps/{{ .values.appName }}'
+        targetRevision: "{{ .head_sha }}"
+        path: "k8s/apps/{{ .values.appName }}"
       destination:
-        server: 'https://kubernetes.default.svc'
+        server: "https://kubernetes.default.svc"
         namespace: "pull-requests"
       syncPolicy:
         automated:
           prune: true
-          allowEmpty: true
+          allowEmpty: false
           selfHeal: false
         managedNamespaceMetadata:
           labels: # The labels to set on the application namespace
@@ -49,3 +67,8 @@ spec:
           - PruneLast=true
           - ServerSideApply=true
           - FailOnSharedResource=true
+
+  templatePatch: |
+    {{- if .extraPatch }}
+    {{- .extraPatch | toYaml }}
+    {{- end }}
