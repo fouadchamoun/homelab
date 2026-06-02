@@ -11,17 +11,35 @@ spec:
   goTemplateOptions: ["missingkey=error"]
 
   generators:
-    - git:
-        repoURL: https://github.com/fouadchamoun/homelab.git
-        revision: main
-        directories:
-          - path: k8s/apps/*
-          - path: k8s/apps/public-apps
-            exclude: true
-          - path: k8s/apps/arr-apps
-            exclude: true
-        values:
-          namespace: '{{ .path.basename }}'
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/fouadchamoun/homelab.git
+              revision: main
+              directories:
+                - path: k8s/apps/*
+                - path: k8s/apps/public-apps
+                  exclude: true
+                - path: k8s/apps/arr-apps
+                  exclude: true
+              values:
+                namespace: "{{ .path.basename }}"
+                appPath: "{{ .path.path }}"
+          - merge:
+              mergeKeys:
+                - path.path # join on the app directory path
+              generators:
+                - git:
+                    repoURL: https://github.com/fouadchamoun/homelab.git
+                    revision: main
+                    directories:
+                      - path: "{{ .values.appPath }}"
+                # PATCH: optional per-app overrides from argocd-patch.yaml
+                - git:
+                    repoURL: https://github.com/fouadchamoun/homelab.git
+                    revision: main
+                    files:
+                      - path: "{{ .values.appPath }}/argocd-patch.yaml"
 
     - git:
         repoURL: https://github.com/fouadchamoun/homelab.git
@@ -46,7 +64,7 @@ spec:
 
   template:
     metadata:
-      name: '{{ .path.basename }}'
+      name: "{{ .path.basename }}"
     spec:
       project: default
       source:
@@ -54,7 +72,7 @@ spec:
         targetRevision: main
         path: "{{ .path.path }}"
       destination:
-        server: 'https://kubernetes.default.svc'
+        server: "https://kubernetes.default.svc"
         namespace: "{{ .values.namespace }}"
       syncPolicy:
         automated:
