@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'k8s/apps/**'
-      - 'k8s/bootstrap/**'
-      - 'k8s/charts/**'
+      - "k8s/apps/**"
+      - "k8s/bootstrap/**"
+      - "k8s/charts/**"
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
             -v $(pwd)/output:/output \
             -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
             -e REPO=${{ github.repository }} \
-            dagandersen/argocd-diff-preview:v0.2.7 --argocd-config-dir /argocd-config
+            dagandersen/argocd-diff-preview:v0.2.8 --argocd-config-dir /argocd-config
 
       - name: Post diff as comment
         run: |
