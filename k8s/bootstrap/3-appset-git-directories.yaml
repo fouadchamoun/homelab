@@ -8,7 +8,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
 
   generators:
     - matrix:
@@ -88,3 +87,8 @@ spec:
           - PruneLast=true
           - ServerSideApply=true
           - FailOnSharedResource=true
+
+  templatePatch: |
+    {{- if .extraPatch }}
+    {{- .extraPatch | toYaml }}
+    {{- end }}
