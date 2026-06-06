@@ -118,6 +118,16 @@
         "linstor-client"
       ],
       "changelogUrl": "https://github.com/LINBIT/linstor-client/blob/master/CHANGELOG.md"
+    },
+    {
+      "automerge": true,
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "terraform"
+      ]
     }
   ]
 }
