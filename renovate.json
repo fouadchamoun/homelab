@@ -18,16 +18,22 @@
   "internalChecksFilter": "strict",
   "minimumReleaseAge": "7 days",
   "argocd": {
-    "managerFilePatterns": ["k8s/bootstrap/*"]
+    "managerFilePatterns": [
+      "k8s/bootstrap/*"
+    ]
   },
   "kubernetes": {
-    "managerFilePatterns": ["k8s/**/*.yaml"]
+    "managerFilePatterns": [
+      "k8s/**/*.yaml"
+    ]
   },
   "customManagers": [
     {
       "customType": "regex",
       "description": "Update versions based on renovate comments in k8s/talos/locals.tf",
-      "managerFilePatterns": ["k8s/talos/locals.tf"],
+      "managerFilePatterns": [
+        "k8s/talos/locals.tf"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>.*?)\\s*depName=(?<depName>.*?)(\\s*versioning=(?<versioning>.*?))?\\s*\\s*\\w+\\s*=\\s*\"?(?<currentValue>[^\"]+)\"?"
       ],
@@ -36,7 +42,9 @@
     {
       "customType": "regex",
       "description": "Update debian packages based on renovate comments in files",
-      "managerFilePatterns": ["**/roles/**/tasks/*"],
+      "managerFilePatterns": [
+        "**/roles/**/tasks/*"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*(?:registry=(?<registry>\\S+)\\s+)?(?:suite=(?<suite>\\S+)\\s+)?(?:components=(?<components>\\S+)\\s+)?(?:binaryArch=(?<binaryArch>\\S+)\\s+)?-\\s*(?<depName>\\S+?)=(?<currentValue>\\S+)"
       ],
@@ -47,7 +55,9 @@
   "packageRules": [
     {
       "description": "Apply 30-day minimum release age for Talos and Kubernetes updates",
-      "matchManagers": ["custom.regex"],
+      "matchManagers": [
+        "custom.regex"
+      ],
       "matchPackageNames": [
         "siderolabs/talos",
         "kubernetes/kubernetes"
@@ -56,14 +66,21 @@
     },
     {
       "description": "Use regex versioning for homebridge Docker image date tags",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["homebridge/homebridge"],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "homebridge/homebridge"
+      ],
       "versioning": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$",
       "separateMajorMinor": false,
       "separateMinorPatch": false
     },
     {
-      "matchDatasources": ["deb", "git-tags"],
+      "matchDatasources": [
+        "deb",
+        "git-tags"
+      ],
       "minimumReleaseAge": null
     },
     {
@@ -74,7 +91,9 @@
       "groupName": "argocd"
     },
     {
-      "matchDatasources": ["deb"],
+      "matchDatasources": [
+        "deb"
+      ],
       "matchPackageNames": [
         "linstor-controller",
         "linstor-satellite"
@@ -83,16 +102,32 @@
       "changelogUrl": "https://github.com/LINBIT/linstor-server/blob/master/CHANGELOG.md"
     },
     {
-      "matchPackageNames": ["linstor-proxmox"],
+      "matchPackageNames": [
+        "linstor-proxmox"
+      ],
       "changelogUrl": "https://github.com/LINBIT/linstor-proxmox/blob/master/CHANGELOG.md"
     },
     {
-      "matchPackageNames": ["linstor-gui"],
+      "matchPackageNames": [
+        "linstor-gui"
+      ],
       "changelogUrl": "https://github.com/LINBIT/linstor-gui/blob/main/CHANGELOG.md"
     },
     {
-      "matchPackageNames": ["linstor-client"],
+      "matchPackageNames": [
+        "linstor-client"
+      ],
       "changelogUrl": "https://github.com/LINBIT/linstor-client/blob/master/CHANGELOG.md"
+    },
+    {
+      "automerge": true,
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "terraform"
+      ]
     }
   ]
 }
