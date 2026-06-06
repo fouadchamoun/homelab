@@ -12,7 +12,6 @@ jobs:
   adblock_terraform:
     name: 'Adblock - Terraform'
     runs-on: ubuntu-latest
-    environment: production
 
     defaults:
       run:
