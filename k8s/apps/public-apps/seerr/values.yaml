@@ -1,7 +1,7 @@
 base-app:
   image:
     repository: seerr/seerr
-    tag: v3.2.0
+    tag: v3.3.0
   service:
     port: 5055
   # ingressRoute:
