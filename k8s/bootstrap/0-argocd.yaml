@@ -35,8 +35,8 @@ spec:
   project: cluster-bootstrap
   syncPolicy:
     automated:
-      enabled: false
-      prune: false
+      enabled: true
+      prune: true
       allowEmpty: false
       selfHeal: true
     syncOptions:

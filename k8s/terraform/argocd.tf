@@ -113,12 +113,12 @@ resource "argocd_application" "cluster_bootstrap" {
       namespace = "argocd"
     }
 
-    # sync_policy {
-    #   automated {
-    #     prune       = false
-    #     allow_empty = false
-    #     self_heal   = true
-    #   }
-    # }
+    sync_policy {
+      automated {
+        prune       = false
+        allow_empty = false
+        self_heal   = false
+      }
+    }
   }
 }
