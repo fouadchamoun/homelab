@@ -21,7 +21,7 @@ spec:
   source:
     repoURL: https://github.com/argoproj/argo-cd
     path: manifests/crds
-    targetRevision: v3.4.3
+    targetRevision: v3.4.4
 
 ---
 apiVersion: argoproj.io/v1alpha1
