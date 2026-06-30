@@ -1,7 +1,7 @@
 base-app:
   image:
     repository: homebridge/homebridge
-    tag: "2026-06-05"
+    tag: "2026-06-19"
   service:
     port: 8581
   podSecurityContext: null
