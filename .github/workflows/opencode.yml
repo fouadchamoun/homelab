@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@77fc88c8ade8e5a620ebbe1197f3a572d29ae91a # latest
         env:
           SCALEWAY_API_KEY: ${{ secrets.SCALEWAY_API_KEY }}
         with:
