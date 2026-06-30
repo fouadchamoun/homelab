@@ -129,6 +129,31 @@
       "matchManagers": [
         "terraform"
       ]
+    },
+    {
+      "automerge": true,
+      "ignoreTests": true,
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "helmv3"
+      ]
+    },
+    {
+      "automerge": true,
+      "ignoreTests": true,
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchManagers": [
+        "helm-values"
+      ]
     }
   ]
 }
