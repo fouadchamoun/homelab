@@ -1,7 +1,7 @@
 base-app:
   image:
     repository: maintainerr/maintainerr
-    tag: 3.15.1
+    tag: 3.15.2
   service:
     port: 6246
   ingressRoute:
