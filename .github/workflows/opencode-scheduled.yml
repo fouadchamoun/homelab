@@ -1,0 +1,31 @@
+name: OpenCode Scheduled
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 9am UTC
+
+jobs:
+  opencode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Run OpenCode
+        uses: anomalyco/opencode/github@latest
+        env:
+          SCALEWAY_API_KEY: ${{ secrets.SCALEWAY_API_KEY }}
+        with:
+          model: scaleway/glm-5.2
+          prompt: |
+            Review the codebase for any TODO comments and create a summary.
+            If you find issues worth addressing, search for existing issues first before creating new ones to avoid duplicates.
+            Only open a new issue if no existing issue already tracks the problem.
