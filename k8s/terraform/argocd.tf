@@ -49,7 +49,8 @@ resource "argocd_project" "cluster_bootstrap" {
       "https://charts.external-secrets.io",
       "https://traefik.github.io/charts",
       "https://charts.signoz.io",
-      "ghcr.io/kite-org/charts"
+      "ghcr.io/kite-org/charts",
+      "https://github.com/fouadchamoun/hermes-agent-helm-chart.git"
     ]
 
     cluster_resource_whitelist {
