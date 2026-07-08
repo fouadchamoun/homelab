@@ -65,9 +65,8 @@ tlsStore:
     defaultCertificate:
       secretName: wildcard-fouad-dev-tls
 
-logs:
-  general:
-    level: INFO
-    format: json
-  access:
-    enabled: true
+log:
+  level: INFO
+  format: json
+accessLog:
+  enabled: true
