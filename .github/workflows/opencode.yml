@@ -34,4 +34,4 @@ jobs:
           SCALEWAY_API_KEY: ${{ secrets.SCALEWAY_API_KEY }}
         with:
           model: scaleway/glm-5.2
-          # share: true
+          share: false
