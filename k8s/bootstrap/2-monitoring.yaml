@@ -14,7 +14,7 @@ spec:
   sources:
   - repoURL: https://charts.signoz.io
     chart: signoz
-    targetRevision: 0.130.1
+    targetRevision: 0.131.0
     helm:
       valuesObject:
         global:
