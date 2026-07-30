@@ -31,6 +31,9 @@ spec:
                   - path: /
                     pathType: ImplementationSpecific
                     port: 8080
+        clickhouse:
+          persistence:
+            size: 25Gi
   - repoURL: https://charts.signoz.io
     chart: k8s-infra
     targetRevision: 0.16.0
