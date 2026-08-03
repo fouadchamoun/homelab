@@ -1,0 +1,130 @@
+extraPatch:
+  spec:
+    syncPolicy:
+      automated:
+        enabled: false
+        prune: true
+        allowEmpty: true
+        selfHeal: false
+    source:
+      repoURL: https://github.com/fouadchamoun/hermes-agent-helm-chart.git
+      targetRevision: 276b637762ef7accd8578a5e9b23fa8c71915810
+      path: .
+      helm:
+        releaseName: hermes-agent
+        skipCrds: true
+        valuesObject:
+          image:
+            repository: nousresearch/hermes-agent
+            tag: "0.16.0"
+            pullPolicy: IfNotPresent
+
+          # Hermes stores mutable state under HERMES_HOME, so a single replica is the
+          # safe default when persistence is enabled.
+          replicaCount: 1
+          revisionHistoryLimit: 5
+          strategy:
+            type: Recreate
+
+          bootstrap:
+            enabled: true
+            # When true, overwrite the persisted config/SOUL with Helm-rendered content.
+            # When false, seed only if the file does not already exist in the PVC.
+            overwrite: true
+
+          config:
+            # Partial Hermes config.yaml written into HERMES_HOME/config.yaml.
+            values:
+              model:
+                default: deepseek/deepseek-v4-pro
+                provider: auto
+                base_url: https://openrouter.ai/api/v1
+              memory:
+                memory_enabled: true
+                user_profile_enabled: true
+                provider: ""
+              honcho: {}
+              telegram:
+                reactions: true
+                channel_prompts: {}
+                allowed_chats: ""
+
+          soul:
+            text: ""
+
+          env:
+            HERMES_HUMAN_DELAY_MODE: "natural"
+            TELEGRAM_ALLOWED_USERS: "953292834"
+            TELEGRAM_HOME_CHANNEL: "-1003949191159"
+            # CAMOFOX_URL: http://localhost:9377
+
+          externalSecret:
+            enabled: true
+            refreshInterval: 1h
+            secretStoreRef:
+              kind: ClusterSecretStore
+              name: "scw-sm"
+            target:
+              template:
+                metadata:
+                  annotations: {}
+                  labels: {}
+            dataFrom:
+              - extract:
+                  key: path:/hermes-agent/env
+                  conversionStrategy: Default
+                  decodingStrategy: None
+                  metadataPolicy: None
+                  nullBytePolicy: Ignore
+
+          apiServer:
+            enabled: true
+            host: "0.0.0.0"
+            port: 8642
+            corsOrigins: ""
+            modelName: hermes-agent
+
+          persistence:
+            enabled: true
+            # existingClaim: ""
+            mountPath: /opt/data
+            accessMode: ReadWriteOnce
+            size: 5Gi
+            storageClass: linstor-replicated
+            annotations: {}
+
+          browser:
+            shm:
+              enabled: true
+              mountPath: /dev/shm
+              sizeLimit: 1Gi
+
+          service:
+            enabled: true
+            type: ClusterIP
+            annotations: {}
+            labels: {}
+
+          ingress:
+            enabled: true
+            className: "traefik"
+            annotations: {}
+            hosts:
+              - host: hermes.homelab.fouad.dev
+                paths:
+                  - path: /
+                    pathType: Prefix
+
+          npmPackages: []
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+
+          extraInitContainers: []
+          extraContainers: []
+          extraObjects: []
