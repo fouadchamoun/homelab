@@ -1,0 +1,127 @@
+replicaCount: 1
+
+global:
+  librechat:
+    existingSecretName: "librechat-credentials"
+
+librechat:
+  # name of existing Yaml configmap, key must be librechat.yaml
+  existingConfigYaml: "librechat-config"
+
+  # Set Config Params here
+  configEnv:
+    ALLOW_REGISTRATION: "true"
+    EMAIL_FROM_NAME: LibreChat
+    EMAIL_SERVICE: Mailjet
+    SEARCH: "true"
+
+  # Volume used to store image Files uploaded to the Web UI
+  imageVolume:
+    enabled: true
+    size: 10Gi
+    accessModes: ReadWriteOnce
+    storageClassName: linstor-replicated
+
+# only lite RAG is supported
+librechat-rag-api:
+  enabled: false
+  # can be azure, openai, huggingface or huggingfacetei
+  embeddingsProvider: openai
+
+
+image:
+  repository: librechat/librechat
+  registry: docker.io
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v0.8.5"
+
+
+service:
+  type: ClusterIP # LoadBalancer, NodePort, ClusterIP
+  port: 3080
+  targetPort: 3080
+  containerPort: 3080
+  annotations: {}
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: librechat.homelab.fouad.dev
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  # tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chat.example.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Host aliases for custom domain-to-IP mappings (adds entries to /etc/hosts)
+hostAliases: []
+# Example - Redirect AWS Bedrock to proxy:
+# hostAliases:
+#   - ip: "10.1.2.3"
+#     hostnames:
+#       - "bedrock-runtime.eu-central-1.amazonaws.com"
+
+# MongoDB Parameters
+mongodb:
+  enabled: true
+  # Bitnami moved versioned image tags to docker.io/bitnamilegacy on 2025-08-28.
+  # See https://github.com/bitnami/charts/issues/35164
+  image:
+    repository: bitnamilegacy/mongodb
+    tag: 8.0.13
+  auth:
+    enabled: false
+  databases:
+   - LibreChat
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: linstor-replicated
+
+
+meilisearch:
+  enabled: true
+  image:
+    repository: getmeili/meilisearch
+    tag: "v1.43.0"
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: linstor-replicated
+  auth:
+    # Use an existing Kubernetes secret for the MEILI_MASTER_KEY
+    existingMasterKeySecret: "librechat-credentials"
+
+# Redis Parameters
+redis:
+  enabled: false
+  architecture: standalone
+  auth:
+    enabled: false
