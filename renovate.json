@@ -65,6 +65,21 @@
       "minimumReleaseAge": "30 days"
     },
     {
+      "description": "Ignore minimum release age for quay/ghcr Docker images in helm-values and argocd managers (no release date info)",
+      "matchManagers": [
+        "helm-values",
+        "argocd"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackagePrefixes": [
+        "quay.io/",
+        "ghcr.io/"
+      ],
+      "minimumReleaseAge": null
+    },
+    {
       "description": "Use regex versioning for homebridge Docker image date tags",
       "matchDatasources": [
         "docker"
