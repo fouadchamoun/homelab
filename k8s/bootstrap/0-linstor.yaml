@@ -24,7 +24,7 @@ spec:
 
     - repoURL: ghcr.io/piraeusdatastore/helm-charts
       chart: snapshot-controller
-      targetRevision: 5.0.4
+      targetRevision: 5.2.0
       helm:
         releaseName: snapshot-controller
         valuesObject:
