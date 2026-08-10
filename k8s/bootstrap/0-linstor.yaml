@@ -49,7 +49,7 @@ spec:
 
     - repoURL: ghcr.io/piraeusdatastore/helm-charts
       chart: linstor-cluster
-      targetRevision: 1.1.1
+      targetRevision: 1.2.0
       helm:
         releaseName: linstor-cluster
         valuesObject:
