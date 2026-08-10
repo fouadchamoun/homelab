@@ -90,7 +90,7 @@ spec:
   sources:
   - repoURL: ghcr.io/kite-org/charts
     chart: kite
-    targetRevision: 0.12.3
+    targetRevision: 0.14.1
     helm:
       valuesObject:
         host: kite.homelab.fouad.dev
