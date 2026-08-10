@@ -15,6 +15,7 @@
     "helpers:githubDigestChangelogs"
   ],
   "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
   "internalChecksFilter": "strict",
   "minimumReleaseAge": "7 days",
   "argocd": {
