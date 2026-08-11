@@ -11,8 +11,6 @@ extraPatch:
           image:
             registry: ghcr.io
             repository: seerr-team/seerr
-            # -- Overrides the image tag whose default is the chart appVersion.
-            tag: "v3.3.0"
 
           config:
             persistence:
