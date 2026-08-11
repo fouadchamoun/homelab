@@ -40,13 +40,32 @@ spec:
                     files:
                       - path: "{{ .values.appPath }}/argocd-patch.yaml"
 
-    - git:
-        repoURL: https://github.com/fouadchamoun/homelab.git
-        revision: main
-        directories:
-          - path: k8s/apps/public-apps/*
-        values:
-          namespace: public-apps
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/fouadchamoun/homelab.git
+              revision: main
+              directories:
+                - path: k8s/apps/public-apps/*
+              values:
+                namespace: public-apps
+                appPath: "{{ .path.path }}"
+          
+          - merge:
+              mergeKeys:
+                - path.path # join on the app directory path
+              generators:
+                - git:
+                    repoURL: https://github.com/fouadchamoun/homelab.git
+                    revision: main
+                    directories:
+                      - path: "{{ .values.appPath }}"
+                # PATCH: optional per-app overrides from argocd-patch.yaml
+                - git:
+                    repoURL: https://github.com/fouadchamoun/homelab.git
+                    revision: main
+                    files:
+                      - path: "{{ .values.appPath }}/argocd-patch.yaml"
 
     - git:
         repoURL: https://github.com/fouadchamoun/homelab.git
