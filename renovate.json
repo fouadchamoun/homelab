@@ -75,11 +75,11 @@
       "matchDatasources": [
         "docker"
       ],
-      "matchPackagePrefixes": [
-        "quay.io/",
-        "ghcr.io/"
-      ],
-      "minimumReleaseAge": null
+      "minimumReleaseAge": null,
+      "matchPackageNames": [
+        "quay.io/{/,}**",
+        "ghcr.io/{/,}**"
+      ]
     },
     {
       "description": "Use regex versioning for homebridge Docker image date tags",
