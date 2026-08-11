@@ -8,7 +8,7 @@ base-app:
   #   enabled: true
   pvc:
     enabled: true
-    size: 300Mi
+    size: 1Gi
     mountPath: /app/config
     # cloneFromNfsPath: /mnt/user/appdata/seerr
   resources:
