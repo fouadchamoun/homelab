@@ -1,0 +1,9 @@
+extraPatch:
+  spec:
+    syncPolicy:
+      syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - ServerSideApply=false
+          - FailOnSharedResource=true
