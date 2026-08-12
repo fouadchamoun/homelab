@@ -21,7 +21,7 @@ spec:
   source:
     repoURL: https://github.com/argoproj/argo-cd
     path: manifests/crds
-    targetRevision: v3.5.1
+    targetRevision: v3.4.6
 
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -57,6 +57,10 @@ spec:
           install: false
         global:
           domain: argocd.homelab.fouad.dev
+          # Default image used by all components
+          image:
+            repository: quay.io/argoproj/argocd
+            tag: v3.4.6
         configs:
           params:
             server.insecure: true
