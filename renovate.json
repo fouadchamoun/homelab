@@ -101,13 +101,6 @@
       "minimumReleaseAge": null
     },
     {
-      "matchPackageNames": [
-        "https://github.com/argoproj/argo-cd",
-        "argo-cd"
-      ],
-      "groupName": "argocd"
-    },
-    {
       "matchDatasources": [
         "deb"
       ],
