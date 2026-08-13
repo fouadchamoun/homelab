@@ -25,17 +25,13 @@ spec:
   source:
     repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
-    targetRevision: 10.2.3
+    targetRevision: 10.2.2
     helm:
       valuesObject:
         crds:
           install: true
         global:
           domain: argocd.homelab.fouad.dev
-          # Default image used by all components
-          image:
-            repository: quay.io/argoproj/argocd
-            tag: v3.4.6
         configs:
           params:
             server.insecure: true
