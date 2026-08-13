@@ -1,5 +1,4 @@
-seerr-chart:
-  nameOverride: seerr
+seerr:
   image:
     registry: ghcr.io
     repository: seerr-team/seerr

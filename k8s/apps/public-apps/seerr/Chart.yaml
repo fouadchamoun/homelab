@@ -5,6 +5,6 @@ name: seerr
 version: 0.1.0
 
 dependencies:
-  - name: seerr-chart
-    repository: oci://ghcr.io/seerr-team/seerr
+  - name: seerr
+    repository: oci://ghcr.io/seerr-team/seerr/seer-chart
     version: 3.9.1
