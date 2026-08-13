@@ -2,31 +2,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-crds
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
-spec:
-  project: cluster-bootstrap
-  syncPolicy:
-    automated:
-      prune: true
-      allowEmpty: false
-      selfHeal: true
-    syncOptions:
-      - ServerSideApply=true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
-  source:
-    repoURL: https://github.com/argoproj/argo-cd
-    path: manifests/crds
-    targetRevision: v3.4.7
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: argocd
   namespace: argocd
   annotations:
@@ -50,17 +25,13 @@ spec:
   source:
     repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
-    targetRevision: 10.2.3
+    targetRevision: 10.2.2
     helm:
       valuesObject:
         crds:
-          install: false
+          install: true
         global:
           domain: argocd.homelab.fouad.dev
-          # Default image used by all components
-          image:
-            repository: quay.io/argoproj/argocd
-            tag: v3.4.6
         configs:
           params:
             server.insecure: true
