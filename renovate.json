@@ -134,6 +134,9 @@
       "matchUpdateTypes": [
         "patch"
       ],
+      "matchDepNames": [
+        "!argo-cd"
+      ],
       "matchManagers": [
         "terraform",
         "helmv3",
