@@ -10,62 +10,25 @@ spec:
   goTemplate: true
 
   generators:
-    - matrix:
-        generators:
-          - git:
-              repoURL: https://github.com/fouadchamoun/homelab.git
-              revision: main
-              directories:
-                - path: k8s/apps/*
-                - path: k8s/apps/public-apps
-                  exclude: true
-                - path: k8s/apps/arr-apps
-                  exclude: true
-              values:
-                namespace: "{{ .path.basename }}"
-                appPath: "{{ .path.path }}"
-          - merge:
-              mergeKeys:
-                - path.path # join on the app directory path
-              generators:
-                - git:
-                    repoURL: https://github.com/fouadchamoun/homelab.git
-                    revision: main
-                    directories:
-                      - path: "{{ .values.appPath }}"
-                # PATCH: optional per-app overrides from argocd-patch.yaml
-                - git:
-                    repoURL: https://github.com/fouadchamoun/homelab.git
-                    revision: main
-                    files:
-                      - path: "{{ .values.appPath }}/argocd-patch.yaml"
+    - git:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        revision: main
+        directories:
+          - path: k8s/apps/*
+          - path: k8s/apps/public-apps
+            exclude: true
+          - path: k8s/apps/arr-apps
+            exclude: true
+        values:
+          namespace: "{{ .path.basename }}"
 
-    - matrix:
-        generators:
-          - git:
-              repoURL: https://github.com/fouadchamoun/homelab.git
-              revision: main
-              directories:
-                - path: k8s/apps/public-apps/*
-              values:
-                namespace: public-apps
-                appPath: "{{ .path.path }}"
-          
-          - merge:
-              mergeKeys:
-                - path.path # join on the app directory path
-              generators:
-                - git:
-                    repoURL: https://github.com/fouadchamoun/homelab.git
-                    revision: main
-                    directories:
-                      - path: "{{ .values.appPath }}"
-                # PATCH: optional per-app overrides from argocd-patch.yaml
-                - git:
-                    repoURL: https://github.com/fouadchamoun/homelab.git
-                    revision: main
-                    files:
-                      - path: "{{ .values.appPath }}/argocd-patch.yaml"
+    - git:
+        repoURL: https://github.com/fouadchamoun/homelab.git
+        revision: main
+        directories:
+          - path: k8s/apps/public-apps/*
+        values:
+          namespace: public-apps
 
     - git:
         repoURL: https://github.com/fouadchamoun/homelab.git
@@ -106,8 +69,3 @@ spec:
           - PruneLast=true
           - ServerSideApply=true
           - FailOnSharedResource=true
-
-  templatePatch: |
-    {{- if .extraPatch }}
-    {{- .extraPatch | toYaml }}
-    {{- end }}
