@@ -26,6 +26,13 @@ jobs:
           ref: main
           path: main
 
+      - name: Resolve Argo CD chart version
+        run: |
+          VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' main/k8s/bootstrap/0-argocd.yaml)
+          echo "Resolved Argo CD chart version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        id: argocd-version
+
       - name: Generate Diff
         run: |
           docker run \
@@ -37,7 +44,7 @@ jobs:
             -v $(pwd)/output:/output \
             -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
             -e REPO=${{ github.repository }} \
-            dagandersen/argocd-diff-preview:v0.2.8 --argocd-config-dir /argocd-config
+            dagandersen/argocd-diff-preview:v0.2.8 --argocd-config-dir /argocd-config --argocd-chart-version ${{ steps.argocd-version.outputs.version }}
 
       - name: Post diff as comment
         run: |
