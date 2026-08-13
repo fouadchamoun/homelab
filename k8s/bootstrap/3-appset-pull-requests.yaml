@@ -25,21 +25,11 @@ spec:
                 head_sha: "{{ .head_sha }}"
                 appName: '{{ regexReplaceAll ".*\\(app:(.*?)\\).*" .title "${1}" }}'
 
-          - merge:
-              mergeKeys:
-                - path.path # join on the app directory path
-              generators:
-                - git:
-                    repoURL: https://github.com/fouadchamoun/homelab.git
-                    revision: "{{ .values.head_sha }}"
-                    directories:
-                      - path: k8s/apps/{{ .values.appName }}
-                # PATCH: optional per-app overrides from argocd-patch.yaml
-                - git:
-                    repoURL: https://github.com/fouadchamoun/homelab.git
-                    revision: "{{ .values.head_sha }}"
-                    files:
-                      - path: "k8s/apps/{{ .values.appName }}/argocd-patch.yaml"
+          - git:
+              repoURL: https://github.com/fouadchamoun/homelab.git
+              revision: "{{ .values.head_sha }}"
+              directories:
+                - path: k8s/apps/{{ .values.appName }}
 
   template:
     metadata:
@@ -67,8 +57,3 @@ spec:
           - PruneLast=true
           - ServerSideApply=true
           - FailOnSharedResource=true
-
-  templatePatch: |
-    {{- if .extraPatch }}
-    {{- .extraPatch | toYaml }}
-    {{- end }}

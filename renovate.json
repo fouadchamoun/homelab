@@ -20,8 +20,7 @@
   "minimumReleaseAge": "7 days",
   "argocd": {
     "managerFilePatterns": [
-      "k8s/bootstrap/*",
-      "k8s/apps/**/argocd-patch.yaml"
+      "k8s/bootstrap/*"
     ]
   },
   "kubernetes": {
