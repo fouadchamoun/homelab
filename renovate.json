@@ -140,7 +140,12 @@
         "terraform",
         "helmv3",
         "helm-values",
-        "argocd"
+        "argocd",
+        "kubernetes"
+      ],
+      "matchDatasources": [
+        "docker",
+        "helm"
       ]
     }
   ]
