@@ -26,14 +26,23 @@ jobs:
           ref: main
           path: main
 
-      - name: Resolve Argo CD chart version
-        run: |
-          VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' main/k8s/bootstrap/0-argocd.yaml)
-          echo "Resolved Argo CD chart version: $VERSION"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Resolve Argo CD chart versions
         id: argocd-version
+        run: |
+          BASE_VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' main/k8s/bootstrap/0-argocd.yaml)
+          TARGET_VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' pull-request/k8s/bootstrap/0-argocd.yaml)
+          echo "Base chart version:   $BASE_VERSION"
+          echo "Target chart version: $TARGET_VERSION"
+          echo "base=$BASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "target=$TARGET_VERSION" >> "$GITHUB_OUTPUT"
+          if [ "$BASE_VERSION" = "$TARGET_VERSION" ]; then
+            echo "upgrade=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "upgrade=true" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Generate Diff
+      - name: Generate Diff (standard)
+        if: steps.argocd-version.outputs.upgrade == 'false'
         run: |
           docker run \
             --network=host \
@@ -44,7 +53,93 @@ jobs:
             -v $(pwd)/output:/output \
             -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
             -e REPO=${{ github.repository }} \
-            dagandersen/argocd-diff-preview:v0.2.8 --argocd-config-dir /argocd-config --argocd-chart-version ${{ steps.argocd-version.outputs.version }}
+            dagandersen/argocd-diff-preview:v0.2.8 \
+            --argocd-config-dir /argocd-config \
+            --argocd-chart-version ${{ steps.argocd-version.outputs.base }}
+
+      - name: Generate Diff (Argo CD upgrade)
+        if: steps.argocd-version.outputs.upgrade == 'true'
+        run: |
+          mkdir -p output-base output-target output
+
+          # Run 1: render both branches with the base (current) chart version.
+          # We only need the base/ app manifests from this run (main rendered with old Argo CD).
+          docker run \
+            --network=host \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd)/main/.github/workflows/assets/argocd:/argocd-config \
+            -v $(pwd)/main:/base-branch \
+            -v $(pwd)/pull-request:/target-branch \
+            -v $(pwd)/output-base:/output \
+            -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
+            -e REPO=${{ github.repository }} \
+            dagandersen/argocd-diff-preview:v0.2.8 \
+            --argocd-config-dir /argocd-config \
+            --argocd-chart-version ${{ steps.argocd-version.outputs.base }} \
+            --output-folder /output \
+            --output-app-manifests
+
+          # Run 2: render both branches with the target (new) chart version.
+          # We only need the target/ app manifests from this run (PR rendered with new Argo CD).
+          docker run \
+            --network=host \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd)/main/.github/workflows/assets/argocd:/argocd-config \
+            -v $(pwd)/main:/base-branch \
+            -v $(pwd)/pull-request:/target-branch \
+            -v $(pwd)/output-target:/output \
+            -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
+            -e REPO=${{ github.repository }} \
+            dagandersen/argocd-diff-preview:v0.2.8 \
+            --argocd-config-dir /argocd-config \
+            --argocd-chart-version ${{ steps.argocd-version.outputs.target }} \
+            --output-folder /output \
+            --output-app-manifests
+
+          # Diff per application. Base rendered with old Argo CD  vs  target rendered
+          # with new Argo CD. Each app gets its own <details> section, matching the
+          # original tool's per-app diff layout. GitHub comments cap at 65536 bytes,
+          # so the diff is truncated to stay within the limit.
+          {
+            echo "# Argo CD Diff Preview (upgrade ${{ steps.argocd-version.outputs.base }} → ${{ steps.argocd-version.outputs.target }})"
+            echo ""
+            echo "> Base branch rendered with chart \`${{ steps.argocd-version.outputs.base }}\`, target branch rendered with chart \`${{ steps.argocd-version.outputs.target }}\`."
+            echo ""
+            for app in $(cd output-base/base && ls); do
+              base_file="output-base/base/$app"
+              target_file="output-target/target/$app"
+              if [ ! -f "$target_file" ]; then
+                # App exists on base but not on target
+                echo "<details><summary>$app (_Deleted_)</summary><br>"
+                echo ""
+                printf '```diff\n%s\n```\n' "$(cat "$base_file")"
+                echo "</details>"
+                echo ""
+                continue
+              fi
+              if diff -u "$base_file" "$target_file" >"/tmp/diff-$app.txt"; then
+                # App unchanged between renders
+                echo "<details><summary>$app</summary><br>"
+                echo ""
+                echo "_No changes_"
+                echo "</details>"
+                echo ""
+              else
+                echo "<details><summary>$app</summary><br>"
+                echo ""
+                printf '```diff\n%s\n```\n' "$(cat "/tmp/diff-$app.txt")"
+                echo "</details>"
+                echo ""
+              fi
+            done
+          } > output/diff.md
+
+          # Truncate to GitHub's 65536 byte comment limit (closing fence guaranteed by tool's per-app sections)
+          if [ "$(wc -c < output/diff.md)" -gt 65500 ]; then
+            head -c 65500 output/diff.md > output/diff.md.trunc
+            printf '\n\n_... diff truncated to fit comment limit_\n' >> output/diff.md.trunc
+            mv output/diff.md.trunc output/diff.md
+          fi
 
       - name: Post diff as comment
         run: |
