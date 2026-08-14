@@ -26,14 +26,23 @@ jobs:
           ref: main
           path: main
 
-      - name: Resolve Argo CD chart version
-        run: |
-          VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' main/k8s/bootstrap/0-argocd.yaml)
-          echo "Resolved Argo CD chart version: $VERSION"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Resolve Argo CD chart versions
         id: argocd-version
+        run: |
+          BASE_VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' main/k8s/bootstrap/0-argocd.yaml)
+          TARGET_VERSION=$(yq '. | select(.metadata.name == "argocd") | .spec.source.targetRevision' pull-request/k8s/bootstrap/0-argocd.yaml)
+          echo "Base chart version:   $BASE_VERSION"
+          echo "Target chart version: $TARGET_VERSION"
+          echo "base=$BASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "target=$TARGET_VERSION" >> "$GITHUB_OUTPUT"
+          if [ "$BASE_VERSION" = "$TARGET_VERSION" ]; then
+            echo "upgrade=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "upgrade=true" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Generate Diff
+      - name: Generate Diff (standard)
+        if: steps.argocd-version.outputs.upgrade == 'false'
         run: |
           docker run \
             --network=host \
@@ -44,7 +53,69 @@ jobs:
             -v $(pwd)/output:/output \
             -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
             -e REPO=${{ github.repository }} \
-            dagandersen/argocd-diff-preview:v0.2.8 --argocd-config-dir /argocd-config --argocd-chart-version ${{ steps.argocd-version.outputs.version }}
+            dagandersen/argocd-diff-preview:v0.2.8 \
+            --argocd-config-dir /argocd-config \
+            --argocd-chart-version ${{ steps.argocd-version.outputs.base }}
+
+      - name: Generate Diff (Argo CD upgrade)
+        if: steps.argocd-version.outputs.upgrade == 'true'
+        run: |
+          mkdir -p output-base output-target output
+
+          # Run 1: render both branches with the base (current) chart version.
+          # We only need base-branch.yaml from this run (main rendered with old Argo CD).
+          docker run \
+            --network=host \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd)/main/.github/workflows/assets/argocd:/argocd-config \
+            -v $(pwd)/main:/base-branch \
+            -v $(pwd)/pull-request:/target-branch \
+            -v $(pwd)/output-base:/output \
+            -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
+            -e REPO=${{ github.repository }} \
+            dagandersen/argocd-diff-preview:v0.2.8 \
+            --argocd-config-dir /argocd-config \
+            --argocd-chart-version ${{ steps.argocd-version.outputs.base }} \
+            --output-folder /output \
+            --output-branch-manifests
+
+          # Run 2: render both branches with the target (new) chart version.
+          # We only need target-branch.yaml from this run (PR rendered with new Argo CD).
+          docker run \
+            --network=host \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd)/main/.github/workflows/assets/argocd:/argocd-config \
+            -v $(pwd)/main:/base-branch \
+            -v $(pwd)/pull-request:/target-branch \
+            -v $(pwd)/output-target:/output \
+            -e TARGET_BRANCH=refs/pull/${{ github.event.number }}/merge \
+            -e REPO=${{ github.repository }} \
+            dagandersen/argocd-diff-preview:v0.2.8 \
+            --argocd-config-dir /argocd-config \
+            --argocd-chart-version ${{ steps.argocd-version.outputs.target }} \
+            --output-folder /output \
+            --output-branch-manifests
+
+          # Diff: base rendered with old Argo CD  vs  target rendered with new Argo CD.
+          # This captures both app changes and rendering-behavior changes from the upgrade.
+          if ! DIFF=$(diff -u output-base/base-branch.yaml output-target/target-branch.yaml); then
+            printf '# Argo CD Diff Preview (upgrade %s → %s)\n\n%s\n\n' \
+              "${{ steps.argocd-version.outputs.base }}" \
+              "${{ steps.argocd-version.outputs.target }}" \
+              "> This PR changes the Argo CD chart version. Base branch rendered with chart \`${{ steps.argocd-version.outputs.base }}\`, target branch rendered with chart \`${{ steps.argocd-version.outputs.target }}\`." \
+              > output/diff.md
+            {
+              echo "\`\`\`diff"
+              printf '%s\n' "$DIFF"
+              echo "\`\`\`"
+            } >> output/diff.md
+          else
+            printf '# Argo CD Diff Preview (upgrade %s → %s)\n\n%s\n\nNo differences found.\n' \
+              "${{ steps.argocd-version.outputs.base }}" \
+              "${{ steps.argocd-version.outputs.target }}" \
+              "> This PR changes the Argo CD chart version. Base branch rendered with chart \`${{ steps.argocd-version.outputs.base }}\`, target branch rendered with chart \`${{ steps.argocd-version.outputs.target }}\`." \
+              > output/diff.md
+          fi
 
       - name: Post diff as comment
         run: |
