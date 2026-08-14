@@ -58,6 +58,16 @@ spec:
               url: http://192.168.200.50:3370
             nfsServer:
               enabled: false
+            highAvailabilityController:
+              enabled: true # default
+              podTemplate:
+                spec:
+                  containers:
+                  - name: ha-controller
+                    args:
+                    - /agent
+                    - --v=4
+
           linstorSatelliteConfigurations:
             - name: host-network
               podTemplate:
