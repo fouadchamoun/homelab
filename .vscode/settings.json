@@ -16,5 +16,8 @@
     "vs-kubernetes.local-tunnel-debug-provider": "",
     "checkForMinikubeUpgrade": false,
     "imageBuildTool": "Docker"
+  },
+  "files.associations": {
+    "*.tf": "terraform"
   }
 }
