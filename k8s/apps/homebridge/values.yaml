@@ -1,22 +1,33 @@
-base-app:
-  image:
-    repository: homebridge/homebridge
-    tag: "2026-08-11"
-  service:
-    port: 8581
-  podSecurityContext: null
-  containerSecurityContext: null
-  hostNetwork: true
-  ingressRoute:
-    enabled: true
-  pvc:
-    enabled: true
-    size: 1Gi
-    mountPath: /homebridge
+homebridge:
+  podOptions:
+    hostNetwork: true
+
+  ingress:
+    main:
+      enabled: true
+      hosts:
+        - host: homebridge.homelab.fouad.dev
+      integrations:
+        traefik:
+          enabled: true
+
+  persistence:
+    config:
+      enabled: false
+    data:
+      enabled: true
+      type: pvc
+      storageClass: linstor-replicated
+      mountPath: /homebridge
+      size: 1Gi
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-options: Delete=false
+
   resources:
     requests:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 75m
+      memory: 200Mi
     limits:
-      cpu: 2000m
+      cpu: 1500m
       memory: 1024Mi
