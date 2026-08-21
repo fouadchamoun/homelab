@@ -34,7 +34,7 @@
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
       - linstor-client=1.27.1-1
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
-      - linstor-proxmox=8.2.1-1
+      - linstor-proxmox=8.3.0-1
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
       - linstor-gui=2.4.0-1
       # renovate: registry=https://packages.linbit.com/public suite=proxmox-9 components=drbd-9
