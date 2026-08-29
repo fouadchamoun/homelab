@@ -137,15 +137,32 @@
         "!argo-cd"
       ],
       "matchManagers": [
-        "terraform",
         "helmv3",
         "helm-values",
         "argocd",
+      ]
+    },
+    {
+      "automerge": true,
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "matchManagers": [
         "kubernetes"
       ],
       "matchDatasources": [
         "docker",
         "helm"
+      ]
+    },
+    {
+      "automerge": true,
+      "matchUpdateTypes": [
+        "patch",
+        "minor",
+      ]
+      "matchManagers": [
+        "terraform",
       ]
     }
   ]
