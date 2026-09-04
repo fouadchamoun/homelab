@@ -47,3 +47,158 @@ spec:
       - PruneLast=true
       - ServerSideApply=true
       - FailOnSharedResource=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  sources:
+  - repoURL: ghcr.io/prometheus-community/charts
+    chart: kube-prometheus-stack
+    targetRevision: 88.6.1
+    helm:
+      valuesObject:
+        crds:
+          enabled: true
+          ## This feature is in preview, off by default and may change in the future.
+          upgradeJob:
+            enabled: true
+        ## Create default rules for monitoring the cluster
+        ##
+        defaultRules:
+          create: true
+          rules:
+            windows: false
+          ## Disabled PrometheusRule alerts
+          disabled: {}
+          # KubeAPIDown: true
+          # NodeRAIDDegraded: true
+        ## Custom rules to override "for" and "severity" in defaultRules
+        ##
+        customRules: {}
+          # AlertmanagerFailedReload:
+          #   for: 3m
+          # AlertmanagerMembersInconsistent:
+          #   for: 5m
+          #   severity: "warning"
+        grafana:
+          defaultDashboardsTimezone: Europe/Paris
+          # Use an existing secret for the admin user.
+          admin:
+            ## Name of the secret. Can be templated.
+            existingSecret: "grafana"
+          ingress:
+              enabled: true
+              ingressClassName: traefik
+              hosts:
+                - grafana.homelab.fouad.dev
+        ## Deploy node exporter as a daemonset to all nodes
+        ##
+        nodeExporter:
+          enabled: true
+          operatingSystems:
+            linux:
+              enabled: true
+            aix:
+              enabled: false
+            darwin:
+              enabled: false
+        kubeEtcd:
+          enabled: false
+        prometheus:
+          ingress:
+              enabled: true
+              ingressClassName: traefik
+              hosts:
+                - prometheus.homelab.fouad.dev
+          prometheusSpec:
+            retention: 10d
+            retentionSize: 40GiB
+            ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/platform/storage.md
+            storageSpec:
+             volumeClaimTemplate:
+               spec:
+                 storageClassName: linstor-replicated
+                 accessModes: ["ReadWriteOnce"]
+                 resources:
+                   requests:
+                     storage: 50Gi
+        alertmanager:
+          alertmanagerSpec:
+            retention: 120h
+            ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/platform/storage.md
+            storage:
+             volumeClaimTemplate:
+               spec:
+                 storageClassName: linstor-replicated
+                 accessModes: ["ReadWriteOnce"]
+                 resources:
+                   requests:
+                     storage: 10Gi
+          ## Alertmanager configuration directives
+          ## ref: https://prometheus.io/docs/alerting/configuration/#configuration-file
+          ##      https://prometheus.io/webtools/alerting/routing-tree-editor/
+          ##
+          # config:
+          #   tplConfig: false
+          #   global:
+          #     resolve_timeout: 5m
+          #     smtp_from: <tmpl_string>
+          #     smtp_smarthost: <string>
+          #     smtp_auth_username: <string>
+          #     smtp_auth_password: <secret>
+          #     smtp_require_tls: true
+          #   receivers:
+          #   - name: admin
+          #     email_configs:
+          #     - to: "mail@fouad.dev"
+          #       # Whether to notify about resolved alerts.
+          #       send_resolved: true
+
+        ## Extra manifests to deploy.  Can be of type dict or list.
+        ## If dict, keys are ignored and only values are used.
+        ## Items contained within extraObjects can be defined as dict or string and are passed through tpl.
+        extraManifests:
+          - apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: grafana
+              namespace: monitoring
+            spec:
+              secretStoreRef:
+                  kind: ClusterSecretStore
+                  name: scw-sm
+              target:
+                  name: grafana
+              refreshInterval: 60s
+              dataFrom:
+              - extract:
+                  key: path:/kube-prometheus-stack/grafana
+                  conversionStrategy: Default
+                  decodingStrategy: None
+                  metadataPolicy: None
+                  nullBytePolicy: Ignore
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: false
+    managedNamespaceMetadata:
+      labels: # The labels to set on the application namespace
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
