@@ -33,5 +33,5 @@ jobs:
         env:
           SCALEWAY_API_KEY: ${{ secrets.SCALEWAY_API_KEY }}
         with:
-          model: scaleway/glm-5.2
+          model: scaleway/deepseek-v4-flash-0731
           share: false
