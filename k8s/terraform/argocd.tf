@@ -48,8 +48,8 @@ resource "argocd_project" "cluster_bootstrap" {
       "quay.io/jetstack/charts",
       "https://charts.external-secrets.io",
       "https://traefik.github.io/charts",
-      "https://charts.signoz.io",
-      "ghcr.io/kite-org/charts"
+      "ghcr.io/kite-org/charts",
+      "ghcr.io/prometheus-community/charts"
     ]
 
     cluster_resource_whitelist {
@@ -83,7 +83,7 @@ resource "argocd_project" "cluster_bootstrap" {
     }
     destination {
       server    = "https://kubernetes.default.svc"
-      namespace = "signoz"
+      namespace = "monitoring"
     }
     destination {
       server    = "https://kubernetes.default.svc"
