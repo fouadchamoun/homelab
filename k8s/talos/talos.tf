@@ -103,10 +103,21 @@ ephemeral "talos_machine_configuration" "controlplane" {
             "k8s.homelab.fouad.dev"
           ]
         }
+        scheduler = {
+          extraArgs = {
+            bind-address = "0.0.0.0"
+          }
+        }
         controllerManager = {
           extraArgs = {
+            bind-address = "0.0.0.0"
             node-monitor-period = "2s"
             node-monitor-grace-period = "20s"
+          }
+        }
+        proxy = {
+          extraArgs = {
+            metrics-bind-address = "0.0.0.0:10249"
           }
         }
       }
