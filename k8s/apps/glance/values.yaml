@@ -1,31 +1,84 @@
-base-app:
+common:
+  TZ: "Europe/Paris"
+  # global:
+  #   traefik:
+  #     commonMiddlewares: []
+  containerOptions:
+    NVIDIA_CAPS: []
+  
   image:
     repository: glanceapp/glance
     tag: v0.8.6
-  replicaCount: 3
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+
+  workload:
+    main:
+      type: Deployment
+      replicas: 3
+      strategy: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 0
+        maxSurge: 1
+
   service:
-    port: 8080
-  ingressRoute:
-    enabled: true
-  volumeMounts:
-    - name: glance-config
+    main:
+      annotations:
+        traefik.ingress.kubernetes.io/service.passhostheader: "true"
+        traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+        traefik.ingress.kubernetes.io/service.sticky.cookie.secure: "true"
+        traefik.ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
+        traefik.ingress.kubernetes.io/service.sticky.cookie.maxage: "300"
+        traefik.ingress.kubernetes.io/service.sticky.cookie.name: "traefik-sticky-cookie"
+      ports:
+        main:
+          protocol: http
+          port: 8080
+  
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: traefik
+      hosts:
+        - host: glance.homelab.fouad.dev
+
+  configmap:
+    config:
+      enabled: true
+      data:
+        config: |
+          {{ .Files.Get "assets/glance.yml" | nindent 2 }}
+        page-home: |
+          {{ .Files.Get "assets/pages/home/page.yml" | nindent 2 }}
+        page-youtube: |
+          {{ .Files.Get "assets/pages/youtube/page.yml" | nindent 2 }}
+
+  persistence:
+    config:
+      enabled: true
+      type: configmap
+      objectName: glance-config
+      expandObjectName: false
       mountPath: /app/config
-  volumes:
-    - name: glance-config
-      configMap:
-        name: glance-config
-        items:
-          - key: config
-            path: glance.yml
-          - key: page-home
-            path: pages/home/page.yml
-          - key: page-youtube
-            path: pages/youtube/page.yml
+      items:
+        - key: config
+          path: glance.yml
+        - key: page-home
+          path: pages/home/page.yml
+        - key: page-youtube
+          path: pages/youtube/page.yml
+    
+    # secret-vol:
+    #   enabled: true
+    #   type: secret
+    #   objectName: secret-name
+    #   expandObjectName: false
+    #   optional: false
+    #   defaultMode: "0777"
+    #   items:
+    #     - key: key1
+    #       path: path1
+    #     - key: key2
+    #       path: path2
+  
   resources:
     requests:
       cpu: 100m
@@ -33,3 +86,22 @@ base-app:
     limits:
       cpu: 500m
       memory: 128Mi
+
+  # extraTpl:
+  # - |
+  #   apiVersion: external-secrets.io/v1
+  #   kind: ExternalSecret
+  #   metadata:
+  #     name: 
+  #   spec:
+  #     secretStoreRef:
+  #         kind: ClusterSecretStore
+  #         name: scw-sm
+  #     target:
+  #         name: 
+  #     refreshInterval: 60s
+  #     data:
+  #       - secretKey: api-token
+  #         remoteRef:
+  #           key: path:/
+  #           property: token
