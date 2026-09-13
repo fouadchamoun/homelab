@@ -1,6 +1,9 @@
 common:
   TZ: "Europe/Paris"
 
+  podOptions:
+    hostUsers: true
+
   image:
     repository: glanceapp/glance
     tag: v0.8.6
