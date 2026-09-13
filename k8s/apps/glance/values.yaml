@@ -59,7 +59,17 @@ common:
           path: pages/home/page.yml
         - key: page-youtube
           path: pages/youtube/page.yml
-    
+    shared:
+      enabled: false
+    varlogs:
+      enabled: false
+    varrun:
+      enabled: false
+    tmp:
+      enabled: false
+    devshm:
+      enabled: false
+      
     # secret-vol:
     #   enabled: true
     #   type: secret
