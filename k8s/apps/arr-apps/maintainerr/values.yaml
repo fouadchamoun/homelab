@@ -5,6 +5,14 @@ maintainerr:
       hosts:
         - host: maintainerr.homelab.fouad.dev
 
+  workload:
+    main:
+      podSpec:
+        containers:
+          main:
+            env:
+              TELEMETRY: "off"
+
   persistence:
     data:
       type: pvc
