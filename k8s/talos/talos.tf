@@ -117,6 +117,9 @@ ephemeral "talos_machine_configuration" "controlplane" {
           disk  = "/dev/sda"
           image = data.talos_image_factory_urls.this.urls.installer
         }
+        sysctls = {
+          "user.max_user_namespaces" = "63556"
+        }
         kernel = {
           modules = [
             {

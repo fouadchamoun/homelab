@@ -1,9 +1,6 @@
 common:
   TZ: "Europe/Paris"
 
-  podOptions:
-    hostUsers: true
-
   image:
     repository: glanceapp/glance
     tag: v0.8.6
@@ -20,7 +17,6 @@ common:
   service:
     main:
       annotations:
-        traefik.ingress.kubernetes.io/service.passhostheader: "true"
         traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
         traefik.ingress.kubernetes.io/service.sticky.cookie.secure: "true"
         traefik.ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
@@ -62,16 +58,6 @@ common:
           path: pages/home/page.yml
         - key: page-youtube
           path: pages/youtube/page.yml
-    shared:
-      enabled: false
-    varlogs:
-      enabled: false
-    varrun:
-      enabled: false
-    tmp:
-      enabled: false
-    devshm:
-      enabled: false
       
     # secret-vol:
     #   enabled: true
