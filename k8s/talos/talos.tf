@@ -103,10 +103,21 @@ ephemeral "talos_machine_configuration" "controlplane" {
             "k8s.homelab.fouad.dev"
           ]
         }
+        scheduler = {
+          extraArgs = {
+            bind-address = "0.0.0.0"
+          }
+        }
         controllerManager = {
           extraArgs = {
+            bind-address = "0.0.0.0"
             node-monitor-period = "2s"
             node-monitor-grace-period = "20s"
+          }
+        }
+        proxy = {
+          extraArgs = {
+            metrics-bind-address = "0.0.0.0:10249"
           }
         }
       }
@@ -116,6 +127,9 @@ ephemeral "talos_machine_configuration" "controlplane" {
         install = {
           disk  = "/dev/sda"
           image = data.talos_image_factory_urls.this.urls.installer
+        }
+        sysctls = {
+          "user.max_user_namespaces" = "63556"
         }
         kernel = {
           modules = [

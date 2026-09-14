@@ -10,7 +10,7 @@ terraform {
   required_providers {
     hcp = {
       source = "hashicorp/hcp"
-      version = "0.113.0"
+      version = "0.114.0"
     }
     sops = {
       source = "carlpett/sops"
@@ -22,7 +22,7 @@ terraform {
     }
     argocd = {
       source = "argoproj-labs/argocd"
-      version = "7.16.0"
+      version = "7.17.0"
     }
   }
 }
