@@ -1,0 +1,5 @@
+extraPatch:
+  spec:
+    destination:
+      namespace: kite-system
+      
