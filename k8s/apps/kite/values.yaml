@@ -1,0 +1,18 @@
+kite:
+  host: kite.homelab.fouad.dev
+  db:
+    sqlite:
+      persistence:
+        pvc:
+          enabled: true
+          storageClass: linstor-replicated
+          size: 1Gi
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: kite.homelab.fouad.dev
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            
