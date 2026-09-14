@@ -5,6 +5,6 @@ name: maintainerr
 version: 0.1.0
 
 dependencies:
-  - name: base-app
-    repository: file://../../../charts/base-app
-    version: 0.1.0
+  - name: maintainerr
+    repository: oci://oci.trueforge.org/truecharts
+    version: 7.33.0

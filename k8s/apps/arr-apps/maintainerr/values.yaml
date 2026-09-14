@@ -1,18 +1,27 @@
-base-app:
-  image:
-    repository: maintainerr/maintainerr
-    tag: 3.24.0
-  service:
-    port: 6246
-  ingressRoute:
-    enabled: true
-  pvc:
-    enabled: true
-    size: 500Mi
-    mountPath: /opt/data
-    # cloneFromNfsPath: /mnt/user/appdata/maintainerr
-  containerSecurityContext:
-    readOnlyRootFilesystem: false
+maintainerr:
+  ingress:
+    main:
+      enabled: true
+      hosts:
+        - host: maintainerr.homelab.fouad.dev
+
+  workload:
+    main:
+      podSpec:
+        containers:
+          main:
+            env:
+              TELEMETRY: "off"
+
+  persistence:
+    data:
+      type: pvc
+      storageClass: linstor-replicated
+      size: 500Mi
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-options: Delete=false
+
   resources:
     requests:
       cpu: 500m
