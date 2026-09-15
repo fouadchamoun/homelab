@@ -1,0 +1,16 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyClass
+metadata:
+  name: ha-affinity
+spec:
+  statefulSet:
+    pod:
+      labels:
+        tailscale: ha-affinity
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                tailscale: ha-affinity

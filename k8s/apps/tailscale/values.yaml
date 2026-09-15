@@ -2,5 +2,5 @@ tailscale-operator:
   installCRDs: true
 
   ingressClass:
-    name: "tailscale"
     enabled: true
+    name: "tailscale"
