@@ -184,3 +184,38 @@ spec:
       - PruneLast=true
       - ServerSideApply=true
       - FailOnSharedResource=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-problem-detector
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  sources:
+  - repoURL: ghcr.io/deliveryhero/helm-charts
+    chart: node-problem-detector
+    targetRevision: 2.4.1
+    helm:
+      valuesObject:
+        settings:
+          log_monitors:
+            - /config/kernel-monitor.json
+            - /config/readonly-monitor.json
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
