@@ -19,7 +19,7 @@ resource "cloudflare_zero_trust_gateway_policy" "block_lg_tv_updates" {
   account_id    = local.account_id
   description   = ""
   action        = "block"
-  enabled       = false
+  enabled       = true
   filters       = ["dns"]
   name          = "Block LG TV updates"
   precedence    = 1000864
