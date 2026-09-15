@@ -5,4 +5,5 @@ metadata:
 spec:
   type: ingress
   replicas: 3
+  proxyClass: ha-affinity
   hostnamePrefix: k8s-ingress-proxy
