@@ -49,7 +49,9 @@ resource "argocd_project" "cluster_bootstrap" {
       "https://charts.external-secrets.io",
       "https://traefik.github.io/charts",
       "ghcr.io/kite-org/charts",
-      "ghcr.io/prometheus-community/charts"
+      "ghcr.io/prometheus-community/charts",
+      "ghcr.io/deliveryhero/helm-charts",
+      "https://kubernetes-sigs.github.io/descheduler"
     ]
 
     cluster_resource_whitelist {
