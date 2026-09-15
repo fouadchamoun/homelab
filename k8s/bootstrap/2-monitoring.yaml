@@ -219,3 +219,84 @@ spec:
       - PruneLast=true
       - ServerSideApply=true
       - FailOnSharedResource=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: descheduler
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: cluster-bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  sources:
+  - repoURL: https://kubernetes-sigs.github.io/descheduler
+    chart: descheduler
+    targetRevision: 0.36.0
+    helm:
+      valuesObject:
+        successfulJobsHistoryLimit: 30
+        timeZone: Europe/Paris
+        deschedulerPolicy:
+          # evictionFailureEventNotification: true
+          # metricsProviders:
+          # - source: Prometheus
+          # prometheus:
+          #   url: http://kube-prometheus-stack-prometheus.monitoring:9090
+          profiles:
+            - name: default
+              pluginConfig:
+                - name: DefaultEvictor
+                  args:
+                    podProtections:
+                      defaultDisabled: []
+                      extraEnabled: []
+                
+                - name: RemovePodsViolatingNodeAffinity
+                  args:
+                    nodeAffinityType:
+                    - requiredDuringSchedulingIgnoredDuringExecution
+                
+                - name: RemoveFailedPods
+                  args:
+                    minPodLifetimeSeconds: 1800
+                    includingInitContainers: true
+                    excludeOwnerKinds:
+                      - Job
+                    reasons:
+                      - ContainerStatusUnknown
+                      - NodeAffinity
+                      - NodeShutdown
+                      - Terminated
+                      - UnexpectedAdmissionError
+                
+                - name: RemoveDuplicates
+                - name: RemovePodsViolatingNodeTaints
+                - name: RemovePodsViolatingInterPodAntiAffinity
+                - name: RemovePodsViolatingTopologySpreadConstraint
+              plugins:
+                balance:
+                  enabled:
+                    - RemoveDuplicates
+                    - RemovePodsViolatingTopologySpreadConstraint
+                deschedule:
+                  enabled:
+                    - RemoveFailedPods
+                    - RemovePodsViolatingNodeTaints
+                    - RemovePodsViolatingNodeAffinity
+                    - RemovePodsViolatingInterPodAntiAffinity
+
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: false
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - PruneLast=true
+      - ServerSideApply=true
+      - FailOnSharedResource=true
