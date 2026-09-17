@@ -1,0 +1,35 @@
+immich:
+  immich:
+    enable_ml: false
+
+  cnpg:
+    main:
+      enabled: true
+
+  redis:
+    enabled: true
+
+  ingress:
+    main:
+      enabled: true
+      hosts:
+        - host: studiosaliba.homelab.fouad.dev
+      integrations: {}
+
+  fallbackDefaults:
+    persistenceType: pvc
+    storageClass: linstor-replicated
+
+  persistence:
+    library:
+      size: 50Gi
+    uploads:
+      size: 50Gi
+    backups:
+      size: 50Gi
+    thumbs:
+      size: 10Gi
+    profile:
+      size: 1Gi
+    video:
+      size: 50Gi

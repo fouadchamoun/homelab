@@ -1,0 +1,10 @@
+---
+apiVersion: v2
+type: application
+name: immich-studiosaliba
+version: 0.1.0
+
+dependencies:
+  - name: immich
+    repository: oci://oci.trueforge.org/truecharts
+    version: 33.17.0
