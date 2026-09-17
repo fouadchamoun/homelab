@@ -51,7 +51,8 @@ resource "argocd_project" "cluster_bootstrap" {
       "ghcr.io/kite-org/charts",
       "ghcr.io/prometheus-community/charts",
       "ghcr.io/deliveryhero/helm-charts",
-      "https://kubernetes-sigs.github.io/descheduler"
+      "https://kubernetes-sigs.github.io/descheduler",
+      "https://cloudnative-pg.github.io/charts"
     ]
 
     cluster_resource_whitelist {
@@ -90,6 +91,10 @@ resource "argocd_project" "cluster_bootstrap" {
     destination {
       server    = "https://kubernetes.default.svc"
       namespace = "kite-system"
+    }
+    destination {
+      server    = "https://kubernetes.default.svc"
+      namespace = "cnpg-system"
     }
   }
 }
