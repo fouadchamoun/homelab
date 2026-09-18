@@ -1,8 +1,8 @@
-# Homelab
+# Infrastructure as Code
 
 [![Cloudflare](https://github.com/fouadchamoun/homelab/actions/workflows/cloudflare.yml/badge.svg)](https://github.com/fouadchamoun/homelab/actions/workflows/cloudflare.yml)
 
-This repository contains the configuration for my personal homelab environment. It is managed using a combination of Ansible and Terraform to automate the setup and maintenance of various services.
+This repository contains the configuration for my personal infrastructure. It is managed using a combination of Ansible, Terraform and ArgoCD to automate the setup and maintenance of various services.
 
 ## Repository Structure
 
